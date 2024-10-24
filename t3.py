@@ -148,7 +148,12 @@ if __name__=="__main__":
     # a=get_context_pbook(request,user,pagetype)
     # print(a)
     # PredRecommendBook.objects.all().delete()
-    email="cji3xu06@gmail.com"
+    email="vs40203a22@gmail.com"
+
+    # 
+    # 10246019@ntub.edu.tw
+    # vs40203a22@gmail.com
+
     # a=Creatuser.objects.filter(email=email).first()
     # print(a.password)
     # a=linebot_pbook(email)
@@ -171,7 +176,7 @@ if __name__=="__main__":
     # for i in a:
     #     print(i.no,">>>",i.booklisurl)
     # 
-    a=Notedatas.objects.all()
+    a=Creatuser.objects.filter(email=email)
     print(a)
-    # a.delete()
+    a.delete()
     print(a.count)
