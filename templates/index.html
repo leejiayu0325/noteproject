@@ -1,0 +1,154 @@
+{% extends 'basepage.html'%}
+{% load static%}
+{% block titleword %}
+    首頁
+{% endblock %}
+{% block container %}
+            
+<section class="section-padding">
+	<div class="container">
+
+        <div class="row">
+            <div class="col-lg-12">
+                <h4 class="text-center">推薦區</h4>
+            </div>
+        </div>
+        
+		<div class="row g-3">
+            <!--收藏前20篩10-->
+			<div class="col-lg-3 col-md-3 col-sm-6 col-xs-12 p-3" >
+				<div class="row">
+                    {% for ktop in keeptop%}
+                    <div class="media py-3 sidebar-post-item">
+                       <a href="#" onclick="submitForm('{{ ktop.bookurl }}')" ><img class="mr-4" src="{{ktop.imageurl}}" alt="{{ktop.bookname|truncatechars:2}}" onerror="this.onerror=null; this.src='{% static "images/default_no_thumbnail.jpg" %}'"></a>
+                       <div class="media-body">
+                            <h5><a href="#" onclick="submitForm('{{ ktop.bookurl }}')" >{{ktop.bookname|truncatechars:10}}</a></h5>
+                            <span class="text-muted letter-spacing text-uppercase font-sm">作者：<a href="{{ktop.authorurl}}" target="_blank">{{ktop.author|truncatechars:10}}</a></span>                            
+                            <h6 class="text-muted letter-spacing text-uppercase font-sm">分類：{{ktop.booktype|truncatechars:10}}</h6>
+                            {% if request.session.loginok %}
+                            <button class="keep btn btn-i btn-r text-center" data-bookurl="{{ktop.bookurl}}" data-bookname="{{ktop.bookname}}">收藏</button>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <form id="form-{{ ktop.bookurl }}" action="{% url 'notelist' %}" method="POST" style="display: none;">
+                        {% csrf_token %}
+                        <input type="hidden" name="bookurl" value="{{ ktop.bookurl }}">
+                    </form>
+                    {% endfor %}
+                    
+				</div>
+			</div>
+            <!--收藏前40篩10-->
+            <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12 p-3" >
+				<div class="row">
+                    
+                    {% if request.session.no_pbook %}                    
+                        {% for ktop in keeptop1%}
+                            <div class="media py-3 sidebar-post-item">
+                            <a href="#" onclick="submitForm('{{ ktop.bookurl }}')" ><img class="mr-4" src="{{ktop.imageurl}}" alt="{{ktop.bookname|truncatechars:2}}" onerror="this.onerror=null; this.src='{% static "images/default_no_thumbnail.jpg" %}'"></a>
+                            <div class="media-body">
+                                    <h5><a href="#" onclick="submitForm('{{ ktop.bookurl }}')" >{{ktop.bookname|truncatechars:10}}</a></h5>
+                                    <span class="text-muted letter-spacing text-uppercase font-sm">作者：<a href="{{ktop.authorurl}}" target="_blank">{{ktop.author|truncatechars:10}}</a></span>                            
+                                    <h6 class="text-muted letter-spacing text-uppercase font-sm">分類：{{ktop.booktype|truncatechars:10}}</h6>
+                                    {% if request.session.loginok %}
+                                    <button class="keep btn btn-i btn-r text-center" data-bookurl="{{ktop.bookurl}}" data-bookname="{{ktop.bookname}}">收藏</button>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <form id="form-{{ ktop.bookurl }}" action="{% url 'notelist' %}" method="POST" style="display: none;">
+                                {% csrf_token %}
+                                <input type="hidden" name="bookurl" value="{{ ktop.bookurl }}">
+                            </form>
+                        {% endfor %}
+                    {% else %}
+                        {% for ktop in wp_book%}                            
+                            <div class="media py-3 sidebar-post-item">
+                            <a href="#" onclick="submitForm('{{ ktop.bookurl }}')" ><img class="mr-4" src="{{ktop.bookurl.imageurl}}" alt="{{ktop.bookurl.bookname|truncatechars:2}}" onerror="this.onerror=null; this.src='{% static "images/default_no_thumbnail.jpg" %}'"></a>
+                            <div class="media-body">
+                                    <h5><a href="#" onclick="submitForm('{{ ktop.bookurl }}')" >{{ktop.bookurl.bookname|truncatechars:10}}</a></h5>
+                                    <span class="text-muted letter-spacing text-uppercase font-sm">作者：<a href="{{ktop.bookurl.authorurl}}" target="_blank">{{ktop.bookurl.author|truncatechars:10}}</a></span>                            
+                                    <h6 class="text-muted letter-spacing text-uppercase font-sm">分類：{{ktop.bookurl.booktype|truncatechars:10}}</h6>
+                                    {% if request.session.loginok %}
+                                    <button class="keep btn btn-i btn-r text-center" data-bookurl="{{ktop.bookurl.bookurl}}" data-bookname="{{ktop.bookurl.bookname}}">收藏</button>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <form id="form-{{ ktop.bookurl }}" action="{% url 'notelist' %}" method="POST" style="display: none;">
+                                {% csrf_token %}
+                                <input type="hidden" name="bookurl" value="{{ ktop.bookurl }}">
+                            </form>
+                        {% endfor %}
+                    {% endif %}
+				</div>
+			</div>
+            <!--觀看前20篩10-->
+            <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12 p-3" >
+				<div class="row">
+                    {% if request.session.no_pbook %}
+                        {% for wtop in watchtop%}
+                        <div class="media py-3 sidebar-post-item">
+                        <a href="#" onclick="submitForm('{{ wtop.bookurl }}')" ><img class="mr-4" src="{{wtop.imageurl}}" alt="{{wtop.bookname|truncatechars:2}}}}" onerror="this.onerror=null; this.src='{% static "images/default_no_thumbnail.jpg" %}'"></a>
+                        <div class="media-body">
+                                <h5><a href="#" onclick="submitForm('{{ wtop.bookurl }}')" >{{wtop.bookname|truncatechars:10}}</a></h5>
+                                <span class="text-muted letter-spacing text-uppercase font-sm">作者：<a href="{{wtop.authorurl}}" target="_blank">{{wtop.author|truncatechars:10}}</a></span>                            
+                                <h6 class="text-muted letter-spacing text-uppercase font-sm">分類：{{wtop.booktype|truncatechars:10}}</h6>
+                                {% if request.session.loginok %}
+                                <button class="keep btn btn-i btn-r text-center" data-bookurl="{{wtop.bookurl}}" data-bookname="{{wtop.bookname}}">收藏</button>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <form id="form-{{ wtop.bookurl }}" action="{% url 'notelist' %}" method="POST" style="display: none;">
+                            {% csrf_token %}
+                            <input type="hidden" name="bookurl" value="{{ wtop.bookurl }}">
+                        </form>
+                        {% endfor %}
+                    {% else %}
+                        {% for ktop in kp_book%}                            
+                            <div class="media py-3 sidebar-post-item">
+                            <a href="#" onclick="submitForm('{{ ktop.bookurl }}')" ><img class="mr-4" src="{{ktop.bookurl.imageurl}}" alt="{{ktop.bookurl.bookname|truncatechars:2}}" onerror="this.onerror=null; this.src='{% static "images/default_no_thumbnail.jpg" %}'"></a>
+                            <div class="media-body">
+                                    <h5><a href="#" onclick="submitForm('{{ ktop.bookurl }}')" >{{ktop.bookurl.bookname|truncatechars:10}}</a></h5>
+                                    <span class="text-muted letter-spacing text-uppercase font-sm">作者：<a href="{{ktop.bookurl.authorurl}}" target="_blank">{{ktop.bookurl.author|truncatechars:10}}</a></span>                            
+                                    <h6 class="text-muted letter-spacing text-uppercase font-sm">分類：{{ktop.bookurl.booktype|truncatechars:10}}</h6>
+                                    {% if request.session.loginok %}
+                                    <button class="keep btn btn-i btn-r text-center" data-bookurl="{{ktop.bookurl.bookurl}}" data-bookname="{{ktop.bookurl.bookname}}">收藏</button>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <form id="form-{{ ktop.bookurl }}" action="{% url 'notelist' %}" method="POST" style="display: none;">
+                                {% csrf_token %}
+                                <input type="hidden" name="bookurl" value="{{ ktop.bookurl }}">
+                            </form>
+                        {% endfor %}
+                    {% endif %}
+                    
+				</div>
+			</div>
+            <!--觀看前40篩10-->
+            <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12 p-3" >
+				<div class="row">
+                    {% for wtop in watchtop1%}
+                    <div class="media py-3 sidebar-post-item">
+                       <a href="#" onclick="submitForm('{{ wtop.bookurl }}')" ><img class="mr-4" src="{{wtop.imageurl}}" alt="{{wtop.bookname|truncatechars:2}}" onerror="this.onerror=null; this.src='{% static "images/default_no_thumbnail.jpg" %}'"></a>
+                       <div class="media-body">
+                            <h5><a href="#" onclick="submitForm('{{ wtop.bookurl }}')" >{{wtop.bookname|truncatechars:10}}</a></h5>
+                            <span class="text-muted letter-spacing text-uppercase font-sm">作者：<a href="{{wtop.authorurl}}" target="_blank">{{wtop.author|truncatechars:10}}</a></span>                            
+                            <h6 class="text-muted letter-spacing text-uppercase font-sm">分類：{{wtop.booktype|truncatechars:10}}</h6>
+                            {% if request.session.loginok %}
+                            <button class="keep btn btn-i btn-r text-center" data-bookurl="{{wtop.bookurl}}" data-bookname="{{wtop.bookname}}">收藏</button>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <form id="form-{{ wtop.bookurl }}" action="{% url 'notelist' %}" method="POST" style="display: none;">
+                        {% csrf_token %}
+                        <input type="hidden" name="bookurl" value="{{ wtop.bookurl }}">
+                    </form>
+                    {% endfor %}
+                    
+				</div>
+			</div>
+		</div>
+	</div>
+</section>
+
+{% endblock %}

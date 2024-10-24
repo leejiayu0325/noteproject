@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>{% block titleword %}
+        {% endblock %}</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!--Favicon-->
+    <link rel="shortcut icon" href="{% static 'images/favicon.ico'%}" type="image/x-icon">
+    
+    <!-- THEME CSS
+	================================================== -->
+    <!-- Bootstrap -->
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css'%}">
+    <!-- Bootstrap Datepicker CSS --><!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Datepicker CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-datepicker@1.9.0/dist/css/bootstrap-datepicker.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="plugins/bootstrap/css/bootstrap.min.css">
+    <!-- Themify -->
+    <link rel="stylesheet" href="{% static 'css/themify-icons.css'%}">
+    <link rel="stylesheet" href="{% static 'css/slick-theme.css'%}">
+    <link rel="stylesheet" href="{% static 'css/slick.css'%}">
+    <!-- Slick Carousel -->
+    <link rel="stylesheet" href="{% static 'css/owl.carousel.min.css'%}">
+    <link rel="stylesheet" href="{% static 'css/owl.theme.default.min.css'%}">
+    <link rel="stylesheet" href="{% static 'css/magnific-popup.css'%}">
+    <!-- manin stylesheet -->
+    <link rel="stylesheet" href="{% static 'css/style.css'%}">
+</head>
+<body>
+    <header class="header-top bg-dark py-4">
+        <div class="container">
+            <div class="col-md-2 ml-auto">
+                {% if request.session.loginok %}
+                    <a href="{% url 'logout' %}" class="btn mb-2 mb-m-0 btn-outline-secondary btn-block" style="border-radius: 20px;color: white;" >logout</a>
+                {% else %}
+                    <a href="{% url 'login' %}" class="btn mb-2 mb-m-0 btn-outline-secondary btn-block" style="border-radius: 20px;color: #f9d5f3;" >login</a>
+                {% endif %}
+            </div>
+            <nav class="navbar navbar-expand-lg navigation menu-white">
+                <a class="navbar-brand" href="{% url 'index' %}">
+                    <img src="{% static 'images/logo-w.png' %}" alt="" class="img-fluid w-50">
+                </a>
+                <!--9/27更改列表-->
+                <div class="collapse navbar-collapse" id="navbar-collapse">
+                    <ul class="menu navbar-nav ml-auto">
+                        <li class="nav-item"><a href="{% url 'index' %}" class="nav-link">首頁</a></li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="{% url 'allnote' %}" id="navbarDropdown2" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                小說分類
+                            </a>
+                            <div class="dropdown-menu" style="width:300px;padding-right: 20px; " aria-labelledby="navbarDropdown2">
+                                <div class="container">
+                                    <div class="row">
+                                        <div class="col-4">                                           
+                                            <a class="dropdown-item" href="{% url 'allnote' %}">全部</a>
+                                            <a class="dropdown-item" href="{% url 'xuanhuan' %}">玄幻奇幻</a>
+                                            <a class="dropdown-item" href="{% url 'yanqing' %}">言情</a>
+                                            <a class="dropdown-item" href="{% url 'xianxia' %}">武俠仙俠</a>
+                                            <a class="dropdown-item" href="{% url 'lishi' %}">軍事歷史</a>
+                                            <a class="dropdown-item" href="{% url 'wangyou' %}">科幻未來</a>
+                                            <a class="dropdown-item" href="{% url 'lingyi' %}">靈異玄幻</a>
+                                        </div>
+                                        <div class="col-4">
+                                            <a class="dropdown-item" href="{% url 'tongren' %}">女生同人</a>
+                                            <a class="dropdown-item" href="{% url 'erciyuan' %}">原創同人</a>
+                                            <a class="dropdown-item" href="{% url 'danmei' %}">耽美</a>
+                                            <a class="dropdown-item" href="{% url 'baihe' %}">百合</a>
+                                            <a class="dropdown-item" href="{% url 'japan' %}">日系</a>
+                                            <a class="dropdown-item" href="{% url 'fanatsy' %}">奇幻冒險</a>
+                                            <a class="dropdown-item" href="{% url 'drama' %}">電視劇</a>
+                                        </div>
+                                        <div class="col-4">
+                                            <a class="dropdown-item" href="{% url 'herotic' %}">情色工口</a>
+                                            <a class="dropdown-item" href="{% url 'blerotic' %}">耽美工口</a>
+                                            <a class="dropdown-item" href="{% url 'classicbook' %}">經典文學</a>
+                                            <a class="dropdown-item" href="{% url 'suspense' %}">推理</a>
+                                            <a class="dropdown-item" href="{% url 'girl' %}">女性向</a>                                
+                                            <a class="dropdown-item" href="{% url 'short' %}">短篇</a>
+                                        </div>
+                                </div>
+                            </div>
+                        </li>
+    
+                        <li class="nav-item"><a href="{% url 'about' %}" class="nav-link">關於NxN</a></li>                        
+                        {% if request.session.loginok %}
+                            <!--<li class="nav-item"><a href="{% url 'dowlpage' %}" class="nav-link">下載區</a></li>-->
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown3" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    會員專區
+                                </a>
+                                <div class="dropdown-menu" aria-labelledby="navbarDropdown3">
+                                    <div class="container">
+                                        <div class="row">
+                                            <div class="col-6">                                            
+                                                <a class="dropdown-item" href="{% url 'member' %}">個人資訊</a>
+                                                <a class="dropdown-item" href="{% url 'memberkeep' %}">收藏記錄</a>
+                                                <a class="dropdown-item" href="{% url 'memberdowload' %}">下載記錄</a>
+                                                <!--<a class="dropdown-item" href="{% url 'xuanhuan' %}">發布文章</a>-->
+                                            </div>                                            
+                                        </div>
+                                        
+                                    </div>
+                                </div>
+                            </li>
+                        {% else %}
+                            <li style="margin-left: 30px;" class="nav-item"><a href="{% url 'member' %}" class="nav-link">會員專區</a></li>
+                        {% endif %}
+                        
+                    </ul>                    
+                </div>
+                <div class="text-lg-right search ml-4">
+                    <div class="search_toggle"><i class="ti-search text-white"></i></div>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <!--search overlay start-->
+    <div class="search-wrap">
+        <div class="overlay">
+            <form action="{% url 'searchanser' %}" class="search-form" method="post">
+                {% csrf_token %}
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-10 col-9">                            
+                            <input type="text" class="form-control" name="searchword" placeholder="Search..."/>
+                        </div>
+                        <div class="col-md-2 col-3 text-right">
+                            <div class="search_toggle toggle-wrap d-inline-block">
+                                <i class="ti-close"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <!--9/27提示視窗-->
+    {% if messages %}
+    <script>
+        window.onload = function() {
+            {% for message in messages %}
+                alert("{{ message }}");
+            {% endfor %}
+        }
+    </script>
+    {% endif %}
+    <!--search overlay end-->
+    {% block container %}
+    {% endblock %}
+    <!-- start footer Area -->		
+    <footer class="footer-section bg-grey">
+        <div class="instagram-photo-section">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <h4 class="text-center"></h4>
+                </div>
+            </div>
+    
+            <div class="row no-gutters" id="instafeed">
+                    
+              </div>
+            </div>
+        </div>
+    </div>
+    
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12 text-center">
+                    <div class="mb-4">
+                        <h2 class="footer-logo">Revolve.</h2>
+                    </div>
+                    <ul class="list-inline footer-socials">
+                        <li class="list-inline-item"><a href="#"><i class="ti-facebook mr-2"></i>Facebook</a></li>
+                        <li class="list-inline-item"><a href="#"><i class="ti-twitter mr-2"></i>Twitter</a></li>
+                        <li class="list-inline-item"><a href="#"><i class="ti-linkedin mr-2"></i>Linkedin</a></li>
+                        <li class="list-inline-item"><a href="#"><i class="ti-pinterest mr-2"></i>Pinterest</a></li>
+                        <li class="list-inline-item"><a href="#"><i class="ti-github mr-2"></i>Github</a></li>
+                        <li class="list-inline-item"><a href="#"><i class="ti-instagram mr-2"></i>Instrgram</a></li>
+                        <li class="list-inline-item"><a href="#"><i class="ti-rss mr-2"></i>rss</a></li>
+                    </ul>
+                </div>
+           
+                <div class="col-md-12 text-center">
+                   <p class="copyright">© Copyright 2024 - Revolve. All Rights Reserved.</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+    <!-- End footer Area -->	
+    <script>
+        // 將 Django 的 URL 傳遞給一個全局 JavaScript 變量
+        var dkep = "{% url 'dkep' %}";
+        var downloadUrl = "{% url 'download' %}";
+        var gotokeep = "{% url 'keep' %}";
+        var notelist ='{% url "notelist" %}';
+        const csrfToken = '{{ csrf_token }}';
+        function submitForm(bookurl) {
+            document.getElementById('form-' + bookurl).submit();
+        }
+          
+    </script>
+    
+
+    <script src="{% static 'js/jquery.js'%}"></script>
+    <!-- Bootstrap jQuery -->
+    <script src="{% static 'js/bootstrap.min.js'%}"></script>
+    <script src="{% static 'js/popper.min.js'%}"></script>
+    <!-- Owl caeousel -->
+    <script src="{% static 'js/owl.carousel.min.js'%}"></script>
+    <script src="{% static 'js/slick.min.js'%}"></script>
+    <script src="{% static 'js/magnific-popup.js'%}"></script>
+    <!-- Instagram Feed Js -->
+    <script src="{% static 'js/instafeed.min.js'%}"></script>
+    <!-- Google Map -->
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCC72vZw-6tGqFyRhhg5CkF2fqfILn2Tsw"></script>
+    <script src="{% static 'js/gmap.js'%}"></script>
+    <!-- main js -->
+    <script src="{% static 'js/custom.js'%}"></script>
+    <script src="{% static 'js/download.js'%}"></script>
+    
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Bootstrap Datepicker JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap-datepicker@1.9.0/dist/js/bootstrap-datepicker.min.js"></script>
+</body>
+</html>
+
+

@@ -1,0 +1,28 @@
+
+{% extends 'basepage.html'%}
+{% load static%}
+{% block titleword %}   
+{{bookname}}
+{% endblock %}
+{% block container %}
+
+<section class="section-padding">
+	<div class="container">
+		<div class="sidebar-widget category mb-5">            
+			<h4 class="text-center widget-title">{{bookname}}</h4>
+			{% if request.session.loginok %}
+				<button class="keep btn btn-i " data-bookurl="{{bookurl}}" data-bookname="{{bookname}}">收藏</button>
+			{% endif %}
+			 <ul class="list-unstyled">
+                {% for nlis in notelist %}
+                    <li class="align-items-center d-flex justify-content-between">
+                        <a class="dropdown-item aulink" href="{{nlis.booklisurl}}" target="_blank">第 {{nlis.no}} 章</a>
+                        <span>{{nlis.no}}</span>
+                    </li>
+                {% endfor%}
+			</ul>
+		</div>
+	</div>
+</section>
+
+{% endblock %}

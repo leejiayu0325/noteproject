@@ -1,0 +1,13 @@
+bs4
+django
+django-heroku
+django-bootstrap5
+django-phonenumber-field
+gunicorn 
+requests
+line-bot-sdk
+lxml
+phonenumbers
+Pillow
+pandas
+scikit-learn

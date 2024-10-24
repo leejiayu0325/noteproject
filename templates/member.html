@@ -1,0 +1,282 @@
+{% extends 'basepage.html'%}
+{% load static%}
+{% block titleword %}
+    會員專區
+{% endblock %}
+{% block container %}
+<section class="section-padding">
+	<div class="container"> 
+        {% if request.session.loginok %}
+        <!-- 個人區域 -->
+        <div class="sidebar-widget about mb-5 text-center p-3">
+            <div class="about-author">
+                {% if request.session.nouser %}
+                    <img src="{%static 'user/'%}{{user}}/img/person.jpg?{{ user|random }}" alt="" class="img-fluid">
+                {% else %}
+                    <img src="{%static 'user/'%}{{user}}/img/person{{fileEx}}?{{ user|random }}" alt="" class="img-fluid">
+                {% endif %}
+            </div>
+            <!--橘色-->
+            <form  name = "form" enctype = "multipart/form-data"action = "" method = "POST" >
+                {% csrf_token %}
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="subscribe-home py-4 px-4 mb-4 mt-4 bg-grey ">
+                            <div class="form-group row align-items-center mb-0">
+                                <label for="colFormLabel" class="col-form-label col-sm-12 h4 col-lg-4">個人圖片</label>                        
+                                    <div class="form-label col-form-label col-sm-12 col-lg-4">
+                                        <input type = "hidden" name = "picfilename" value="{{picfilename}}"/>
+                                        <input type = "file" class="btn-primary col-sm-12 " placeholder = "picture" name = "picture" />
+                                    </div>
+                                    
+                                    <div class="form-label col-form-label col-sm-12 col-lg-2 ms-lg-5">
+                                        <button class="btn btn-dark btn-lg btn-block" type = "submit">
+                                            <strong>上傳</strong>
+                                        </button>
+                                    </div>                                
+                            </div>                            
+                            {% if form.picture.errors %}                    
+                                {% for error in form.picture.errors %}
+                                    <p class="mb-1" style="color: #c80707;">{{error}}</p>                            
+                                {% endfor %}                    
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </form>
+            <!--end橘色-->
+            <!--白色-->
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="subscribe-home py-2 px-4 mb-4  ">
+                        <div class="form-group row align-items-center mb-0">
+                            <label class="col-form-label col-sm-12 h4 col-lg-4">姓名</label>
+                            <div class="form-label col-form-label col-sm-12 col-lg-4">
+                                <label class="col-form-label col-sm-12 h5 ">{{name}}</label>
+                            </div>                            
+                            <div class="col-sm-2">                                
+                            </div>
+                          </div>
+                    </div>
+                </div>
+            </div>
+            <!--end白色-->
+            <!--橘色-->
+            <form  name = "form" action = "" method = "POST" >
+                {% csrf_token %}
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="subscribe-home py-4 px-4 mb-4 bg-grey ">
+                            <div class="form-group row align-items-center mb-0">
+                                <label class="col-form-label col-sm-12 h4 col-lg-4">暱稱</label>
+                                {% if request.session.nicknameok %}
+                                    <div class="form-label col-form-label col-sm-12 col-lg-4">
+                                        <label class="col-form-label col-sm-12 h5 col-lg-4">{{nickname}}</label>
+                                    </div>
+                                {% else %}
+                                    <div class="form-label col-form-label col-sm-12 col-lg-4">
+                                        <input type = "text" class="form-control form-control-lg"  placeholder = "暱稱" name = "nickname" />
+                                    </div>                                    
+                                    <div class="form-label col-form-label col-sm-12 col-lg-2 ms-lg-5">
+                                        <button class="btn btn-dark btn-lg btn-block" type = "submit" onclick="return confirm('確定要新增嗎？確認後將不能更改')">
+                                            <strong>新增</strong>
+                                        </button>
+                                    </div>
+                                {% endif %}
+                            </div>
+                            {% if form.nickname.errors %}                    
+                                    {% for error in form.nickname.errors %}
+                                        <p class="mb-1" style="color: #c80707;">{{error}}</p>                            
+                                    {% endfor %}                    
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </form>
+            <!--end橘色-->
+            <!--白色-->
+            <form  name = "form" action = "" method = "POST" >
+                {% csrf_token %}
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="subscribe-home py-2 px-4 mb-4  ">
+                            <div class="form-group row align-items-center mb-0">
+                                <label class="col-form-label col-sm-12 h4 col-lg-4">生日</label>
+                                {% if request.session.birthdayok %}
+                                    <div class="form-label col-form-label col-sm-12 col-lg-4">
+                                        <label class="col-form-label col-sm-12 h5 " >{{birthday}}</label>
+                                    </div>
+                                    
+                                {% else %}
+                                    <div class="form-label col-form-label col-sm-12 col-lg-4">
+                                        <input type="text" class="inputback form-control datepicker"  placeholder="Select Date" name = "birthday" value="{{birthday}}">
+                                    </div>                                    
+                                    <div class="form-label col-form-label col-sm-12 col-lg-2 ms-lg-5">
+                                        <button class="btn btn-dark btn-lg btn-block" type = "submit" onclick="return confirm('確定要新增嗎？確認後將不能更改')">
+                                            <strong>新增</strong>
+                                        </button>
+                                    </div>
+                                {% endif %}
+                            </div>
+                            {% if form.birthday.errors %}                    
+                                    {% for error in form.birthday.errors %}
+                                        <p class="mb-1" style="color: #c80707;">{{error}}</p>                            
+                                    {% endfor %}                    
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </form>
+            <!--end白色-->
+            <!--橘色-->
+            <form  name = "form" action = "" method = "POST" >
+                {% csrf_token %}
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="subscribe-home py-4 px-4 mb-4 bg-grey ">
+                            <div class="form-group row align-items-center mb-0">
+                                <label for="date" class="form-label col-form-label col-sm-12 h4 col-lg-4">手機</label>
+                                {% if request.session.phoneok %}
+                                    <div class="form-label col-form-label col-sm-12 col-lg-4">
+                                        <input class="form-control form-control-lg " type="text"  placeholder="phone" name = "phone" value="{{phone}}" />
+                                    </div>
+                                    
+                                    <div class="form-label col-form-label col-sm-12 col-lg-2 ms-lg-5">
+                                        <button class="btn btn-dark btn-lg btn-block" type = "submit">
+                                            <strong>更新</strong>
+                                        </button>
+                                    </div>
+                                {% else %}
+                                    <div class="form-label col-form-label col-sm-12 col-lg-4">
+                                        <input class="form-control form-control-lg" type="text" placeholder="phone" name = "phone" />
+                                    </div>
+                                    
+                                    <div class="form-label col-form-label col-sm-12 col-lg-2 ms-lg-5">
+                                        <button class="btn btn-dark btn-lg btn-block" type = "submit">
+                                            <strong>新增</strong>
+                                        </button>
+                                    </div>
+                                {% endif %}
+                            </div>
+                            {% if form.phone.errors %}                    
+                                    {% for error in form.phone.errors %}
+                                        <p class="mb-1" style="color: #c80707;">{{error}}</p>                            
+                                    {% endfor %}                    
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </form>
+            <!--end橘色-->
+            <!--白色-->
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="subscribe-home py-2 px-4 mb-4  ">
+                        <div class="form-group row align-items-center mb-0">
+                            <label class="col-form-label col-sm-12 h4 col-lg-4">信箱</label>
+                            <div class="form-label col-form-label col-sm-12 col-lg-4">
+                                <label class="col-form-label col-sm-12 h5 col-lg-4" >{{email}}</label>
+                            </div>                            
+                            <div class="col-sm-2">                        
+                            </div>
+                          </div>
+                    </div>
+                </div>
+            </div>
+            <!--end白色-->
+            <!--橘色-->
+            
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="subscribe-home py-4 px-4 mb-4 bg-grey ">
+                        <div class="form-group row align-items-center mb-0">
+                            <label class="col-form-label col-sm-12 h4 col-lg-4">密碼</label>
+                            <div class="form-label col-form-label col-sm-12 col-lg-4">
+                                <input type = "password" class="form-control form-control-lg" value="password" name = "password" />
+                            </div>
+                            
+                            <div class="form-label col-form-label col-sm-12 col-lg-2 ms-lg-5">
+                                <a class="btn btn-dark btn-lg btn-block" href="{% url 'oldpswchange'%}">
+                                    <strong>變更密碼</strong>
+                                </a>                                
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!--end橘色-->
+            
+        </div>
+        <!-- end個人區域 -->
+        <!-- 需要透過機器學習預測推薦區 -->
+        <div class="related-posts-block mt-5 border-top border-bottom py-3">
+            <h3 class="news-title mb-4 text-center">
+               You May Also Like
+            </h3>
+            
+            <div class="row">
+                {% for pbook in p_book%}
+                <div class="col-lg-4 col-md-4 col-sm-6">
+                    <div class="post-block-wrapper mb-4 mb-lg-0 text-center">
+                        {% if request.session.no_pbook %}
+                        <!--沒有收藏的情況-->
+                            <h6>
+                                分類：{{pbook.booktype}}
+                            </h6>
+                            <a  href="#" onclick="submitForm('{{ pbook.bookurl }}')" >
+                                <img class="img-fluid img-me " src="{{pbook.imageurl}}" alt="post-thumbnail" onerror="this.onerror=null; this.src='{% static "images/default_no_thumbnail.jpg" %}'"/>
+                            </a>
+                            <div class="post-content mt-3">
+                                <h5 >
+                                    <a  href="#" onclick="submitForm('{{ pbook.bookurl }}')">{{pbook.bookname}}</a>
+                                </h5>                            
+                                <h6>
+                                    作者：<a href="{{pbook.authorurl}}" class="aulink" target="_blank">{{pbook.author}}</a>                                
+                                </h6>                            
+                            </div>
+                            <form id="form-{{ pbook.bookurl }}" action="{% url 'notelist' %}" method="POST" style="display: none;">
+                                {% csrf_token %}
+                                <input type="hidden" name="bookurl" value="{{ pbook.bookurl }}">
+                            </form>
+                            <button class="keep btn btn-i " data-bookurl="{{pbook.bookurl}}" data-bookname="{{pbook.bookname}}">收藏</button>
+                        {% else %}                            
+                            <h6>
+                                分類：{{pbook.bookurl.booktype}}
+                            </h6>
+                            <a href="#" onclick="submitForm('{{ pbook.bookurl.bookurl }}')" target="_blank">
+                                <img class="img-fluid img-me " src="{{pbook.bookurl.imageurl}}" alt="post-thumbnail" onerror="this.onerror=null; this.src='{% static "images/default_no_thumbnail.jpg" %}'"/>
+                            </a>
+                            <div class="post-content mt-3">
+                                <h5 >
+                                    <a href="#" onclick="submitForm('{{ pbook.bookurl.bookurl }}')">{{pbook.bookurl.bookname}}</a>
+                                </h5>                            
+                                <h6>
+                                    作者：<a href="{{pbook.bookurl.authorurl}}" class="aulink" target="_blank">{{pbook.bookurl.author}}</a>                                
+                                </h6>                                                            
+                            </div>
+                            <form id="form-{{ pbook.bookurl.bookurl }}" action="{% url 'notelist' %}" method="POST" style="display: none;">
+                                {% csrf_token %}
+                                <input type="hidden" name="bookurl" value="{{ pbook.bookurl.bookurl }}">
+                            </form>
+                            <button class="keep btn btn-i " data-bookurl="{{pbook.bookurl.bookurl}}" data-bookname="{{pbook.bookurl.bookname}}">收藏</button>
+                            
+                        {% endif %}
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            
+        </div>
+        {% else %}
+        <div class="row justify-content-center">
+            <div style="min-height: 42vh;">    
+                <label class="form-label" >尚未登入，請先登入</label>
+                <a href="{% url 'login' %}" class="btn mb-2 mb-m-0 btn-primary btn-block" style="border-radius: 20px;" >login</a>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</section>
+
+{% endblock %}

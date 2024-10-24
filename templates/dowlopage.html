@@ -1,0 +1,62 @@
+{% extends 'basepage.html'%}
+{% load static%}
+{% block titleword %}
+    下載
+{% endblock %}
+{% block container %}
+<!--9/27更新內容-->      
+
+<section class="section-padding">
+	<div class="container" style="min-height: 42vh;"> 
+        {% if request.session.loginok %}
+            <form action= "{% url 'dowlpage' %}" method="post">
+                {% csrf_token %}
+                <div class="d-flex align-items-center mb-3 pb-1">
+                    <i class="fas fa-cubes fa-2x me-3" style="color: #ff6219;"></i>
+                    <span class="h1 fw-bold mb-0">N x N</span>
+                </div>
+                <h5 class="fw-normal mb-3 pb-3" style="letter-spacing: 1px;">下載</h5>
+                <div class="d-flex flex-row align-items-center mb-4">
+                    <i class="fas fa-lock fa-lg me-3 fa-fw"></i>
+                    <div data-mdb-input-init class="form-outline flex-fill mb-0">
+                        <input type="text" id="form3Example4c" class="form-control" name="searchword" placeholder="請輸入完整關鍵字：作者／書名"/>
+                        
+                    </div>
+                </div>
+                <div class="pt-1 mb-4">
+                    <input type="submit" class="btn btn-dark btn-lg btn-block" value="確認"/>                
+                </div>                       
+            </form>
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <div class="row">
+                    {% if request.session.searchOK %}        
+                        {% for listdatas in pagelist %}  
+                                
+                        <div class="col-lg-3 col-md-6">
+                            <article class="post-grid mb-5">
+                            <a class="post-thumb mb-4 d-block" href="連結" target="_blank">
+                                <img src="{{listdatas.imgurl}}" alt="{{listdatas.bookname}}" class="img-fluid w-100" style="width:100px;width:250px;" onerror="this.onerror=null; this.src='{% static "images/default_no_thumbnail.jpg" %}'">
+                            </a>  
+                            <h3 class="post-title mt-1"><a href="{{listdatas.bookurl}}" target="_blank">{{listdatas.bookname}}</a></h3>
+                            <span class="text-muted letter-spacing text-uppercase font-sm" >作者：{{listdatas.author}}</span>
+                            <br/>
+                            <button type="submit" class="download_button btn btn-primary btn-block" data-bookurl="{{listdatas.bookurl}}"
+                                data-bookname="{{listdatas.bookname}}">下載</button>
+                            </article>
+                        </div>
+                        {% endfor %}        
+                    {% endif %}
+                </div>
+            </div>
+        {% else %}
+        <div class="row justify-content-center">
+            <div style="min-height: 42vh;">    
+                <label class="form-label" >尚未登入，請先登入</label>
+                <a href="{% url 'login' %}" class="btn mb-2 mb-m-0 btn-primary btn-block" style="border-radius: 20px;" >login</a>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</section>
+
+{% endblock %}

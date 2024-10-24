@@ -1,0 +1,49 @@
+{% extends 'basepage.html'%}
+{% load static%}
+{% block titleword %}
+    忘記密碼
+{% endblock %}
+{% block container %}
+<section class="section-padding">
+	<div class="container"> 
+        <form action= "{% url 'changepsw' %}" method="post">
+            {% csrf_token %}
+            <div class="d-flex align-items-center mb-3 pb-1">
+                <i class="fas fa-cubes fa-2x me-3" style="color: #ff6219;"></i>
+                <span class="h1 fw-bold mb-0">N x N</span>
+                <input type = "hidden" name = "email" value="{{email}}"/>
+            </div>
+            <h5 class="fw-normal mb-3 pb-3" style="letter-spacing: 1px;">更改密碼</h5>
+            <div class="d-flex flex-row align-items-center mb-4">
+                <i class="fas fa-lock fa-lg me-3 fa-fw"></i>
+                <div data-mdb-input-init class="form-outline flex-fill mb-0">
+                    <label class="form-label" for="form3Example4c">New password</label>
+                    <input type="password" id="form3Example4c" class="form-control" name="password"/>
+                    <p class="mb-1" style="color: #c80707;">{{oldpwerror}}</p>
+                    {% if form.password.errors %}                    
+                        {% for error in form.password.errors %}
+                            <p class="mb-1" style="color: #c80707;">{{error}}</p>                            
+                        {% endfor %}                    
+                    {% endif %}                     
+                </div>
+            </div>
+            <div class="d-flex flex-row align-items-center mb-4">
+                <i class="fas fa-key fa-lg me-3 fa-fw"></i>
+                <div data-mdb-input-init class="form-outline flex-fill mb-0">
+                    <label class="form-label" for="form3Example4cd">Repeat your password</label>
+                    <input type="password" id="form3Example4cd" class="form-control" name="checkpw"/>
+                    <p class="mb-1" style="color: #c80707;">{{pwerror}}</p>
+                    {% if form.checkpw.errors %}                    
+                        {% for error in form.checkpw.errors %}
+                            <p class="mb-1" style="color: #c80707;">{{error}}</p>                            
+                        {% endfor %}                    
+                    {% endif %}  
+                </div>
+            </div>
+            <div class="pt-1 mb-4">
+                <input type="submit" class="btn btn-dark btn-lg btn-block" value="確認"/>                
+            </div>                       
+        </form>
+    </div>
+</section>
+{% endblock %}

@@ -1,0 +1,102 @@
+{% extends 'basepage.html'%}
+{% load static%}
+{% block titleword %}   
+{{pagetype}} 
+{% endblock %}
+{% block container %}
+            
+<section class="section-padding">
+	<div class="container">
+    <div class="row">
+      <div class="col-md-3  ml-auto">
+        <div class="btn-group mb-2 mb-md-0 btn-block">
+          
+            <form action="" method="post">
+              {% csrf_token %}
+              <input type="hidden" name="hiddenpage" value="{{ currentPage }}">
+              <!-- 按觀看數排序 -->
+              <button type="submit" name="sort_by" value="watch" class="btn btn-primary">觀看數</button>
+              <!-- 按收藏數排序 -->
+              <button type="submit" name="sort_by" value="keep" class="btn btn-secondary">收藏數</button>
+            </form>          
+          
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-lg-12" style="margin-bottom:50px">
+        <h4 class="text-center">{{pagetype}}</h4>
+      </div>
+      <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <div class="row">
+        {% for listdatas in pagelist %}
+        
+          <div class="col-lg-3 col-md-6">
+            <article class="post-grid mb-5">
+              <a class="post-thumb mb-4 d-block" href="#" onclick="submitForm('{{ listdatas.bookurl }}')" >
+                <img src="{{listdatas.imageurl}}" alt="{{listdatas.bookname}}" class="img-fluid w-100 img-view" onerror="this.onerror=null; this.src='{% static "images/default_no_thumbnail.jpg" %}'">
+              </a>               
+              <h3 class="post-title mt-1"><a href="#" onclick="submitForm('{{ listdatas.bookurl }}')" >{{listdatas.bookname|truncatechars:10}}</a></h3>
+              <form id="form-{{ listdatas.bookurl }}" action="{% url 'notelist' %}" method="POST" style="display: none;">
+                {% csrf_token %}
+                <input type="hidden" name="bookurl" value="{{ listdatas.bookurl }}">
+              </form> 
+              <span class="text-muted letter-spacing text-uppercase font-sm" >作者：<a href="{{listdatas.authorurl}}">{{listdatas.author}}</a></span>
+              <br/>
+              
+              <div>
+                <span class="text-muted letter-spacing text-uppercase font-sm ">觀看:{{listdatas.watch}}</span>
+                <span class="text-muted letter-spacing text-uppercase font-sm" style="margin-left:15px;">收藏:{{listdatas.keep}}</span>
+                {% if request.session.loginok %}
+                <button class="keep btn btn-i btn-r" data-bookurl="{{listdatas.bookurl}}" data-bookname="{{listdatas.bookname}}">收藏</button>
+                {% endif %}
+              </div>
+              {% if request.session.loginok %}
+              <button type="submit" class="download_button btn btn-primary btn-block" data-bookurl="{{listdatas.bookurl}}"
+                  data-bookname="{{listdatas.bookname}}">下載</button> 
+                
+              {% endif %}
+            </article>
+          </div>
+        {% endfor %}
+        </div>
+      </div>
+
+      <div class="m-auto">
+        <div class="pagination mt-5 pt-4">
+          <ul class="list-inline ">
+            {% if pagelist.has_previous %}
+            <li class="list-inline-item">
+                <a href="?page=1">
+                    最前
+                </a>
+            </li>
+            <li class="list-inline-item"><a href="?page={{pagelist.previous_page_number}}" class="prev-posts"><i class="ti-arrow-left"></i></a></li>
+
+            {% endif %}
+            {% for page_num in rangePage %}              
+              {% if page_num == currentPage %}
+                <li class="list-inline-item "><a href="?page={{page_num}}" class="active">{{page_num}}</a></li>                
+              {% else %}
+                <li class="list-inline-item"><a href="?page={{page_num}}">{{page_num}}</a></li>                
+              {% endif %}
+            {% endfor %}
+            
+            {% if pagelist.has_next %}
+            <li class="list-inline-item"><a href="?page={{pagelist.next_page_number}}" class="prev-posts"><i class="ti-arrow-right"></i></a></li>
+            <li class="list-inline-item">
+                <a href="?page={{pagelist.paginator.num_pages}}">
+                    最末
+                </a>
+            </li>
+            {% endif %}
+
+          </ul>
+        </div>
+      </div>
+    </div>
+	</div>
+</section>
+
+
+{% endblock %}
