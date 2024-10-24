@@ -43,7 +43,6 @@ def get_note_type():
             # MessageTemplateAction
             MessageAction(label=f'{d.urlname}',text=f'{d.urlname}'))
         name.append(d.urlname)
-    print(name)
     return action,name
     # return actions
 def get_columns(text,booktype="",searchkey=""):
@@ -121,8 +120,10 @@ def callback(request):
         
         if "linestep" in request.session:
             step=request.session["linestep"]
+            print(1)
         if "booktype" in request.session:
             user_sletype=request.session["booktype"]            
+            print(2)
 
         print("----------star--------------")
         print(step,user_sletype)
@@ -142,6 +143,7 @@ def callback(request):
                     message=TextSendMessage(text="接收到貼圖，重新開始...."),tempmessage
                     step+=1                    
                     request.session['linestep'] = step
+                    request.session["booktype"]=""
                     line_bot_api.reply_message(event.reply_token,message) 
             elif isinstance(event,MessageEvent):  
                 text=event.message.text
@@ -149,8 +151,10 @@ def callback(request):
                 if text=="更新20241002":
                     adm_superuser="更新20241002"
                     step=90
+                    request.session["booktype"]=""
                     
                 if adm_superuser=="更新20241002" and step==90:
+                    request.session["booktype"]=""
                     if text=="getdatasnewinfo":                        
                         step=0                        
                         NavInfo().alltypeurl()
@@ -168,14 +172,15 @@ def callback(request):
                             message = TextSendMessage(text="更新完畢，輸入任一鍵重新開始....")
                 else:
                     try:
-                        if text=="離開" or text.lower()=="exit":
+                        if text=="離開" or text.lower()=="exit":                            
                             step=0
+                            request.session["booktype"]=""
                             message=temalatemessage()
-                                        
                             step+=1
                             
                         else:
                             if step==0:
+                                request.session["booktype"]=""
                                 message=temalatemessage()                                        
                                 step+=1
                                 
@@ -304,11 +309,11 @@ def callback(request):
                         text = "輸入不正確，請重新輸入...."
                         message = TextSendMessage(text=text)
                         line_bot_api.reply_message(event.reply_token,message)
+                
+                line_bot_api.reply_message(event.reply_token,message)
                 request.session["booktype"]=user_sletype
                 request.session['linestep'] = step
-                                       
                 print("line>>>>step>>>>>booktype",request.session['linestep'] , step,request.session["booktype"])
-                line_bot_api.reply_message(event.reply_token,message)
         return HttpResponse()
     else:
         return HttpResponseBadRequest()
