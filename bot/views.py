@@ -119,7 +119,7 @@ def callback(request):
         signature=request.META['HTTP_X_LINE_SIGNATURE']
         body=request.body.decode('utf-8')    
         
-        if "step" in request.session:
+        if "linestep" in request.session:
             step=request.session["linestep"]
         if "booktype" in request.session:
             user_sletype=request.session["booktype"]            
