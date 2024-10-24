@@ -118,6 +118,7 @@ def callback(request):
     if request.method=='POST':
         signature=request.META['HTTP_X_LINE_SIGNATURE']
         body=request.body.decode('utf-8')        
+        step = request.session.get('step', 0)
         try:
             events=parse.parse(body,signature)
         except InvalidSignatureError:
@@ -125,8 +126,7 @@ def callback(request):
         except LineBotApiError:
             return HttpResponseBadRequest()
         for event in events:
-            # while True:
-            step = request.session.get('step', 0)
+            # while True:            
             if isinstance(event.message, StickerMessage):  # 處理貼圖訊息
                     step=0
                     tempmessage=temalatemessage()
