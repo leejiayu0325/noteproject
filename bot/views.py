@@ -166,47 +166,48 @@ def callback(request):
                                 message=temalatemessage()
                                         
                                 step+=1
-                            elif text=="書本分類" and step==1:                        
-                                columns=[]             
-                                for i,k in enumerate(action):                                      
-                                    if (i+1)%3==0:
-                                        columns.append(
-                                            CarouselColumn(
-                                                text=f'第二步：選擇{i-1}:{i+1}',
-                                                actions=action[i-2:i+1]                                        
-                                            )
-                                        )
-                                
-                                carousel_template = CarouselTemplate(columns=columns)
-
-                                message = TemplateSendMessage(alt_text='書本分類', template=carousel_template)
-                                step+=1
-                            elif step==1:
-                                if text!="其他":                            
-                                    columns=get_columns(text,booktype="")
-                                    carousel_template = CarouselTemplate(columns=columns)                                                    
-                                    message=TemplateSendMessage(alt_text='小說推薦', template=carousel_template),TextSendMessage(text="輸入任一鍵重新開始....")
-                                    step=0
-                                    
-                                else:
-                                    message=TemplateSendMessage(
-                                                alt_text='推薦',
-                                                template=ButtonsTemplate(
-                                                    title='推薦與搜尋',
-                                                    text='第二步：請選擇分類',
-                                                    actions=[                                                    
-                                                        MessageTemplateAction(
-                                                            label='會員推薦',
-                                                            text='會員推薦',
-                                                        ),
-                                                        MessageTemplateAction(
-                                                            label='搜尋',
-                                                            text='搜尋',
-                                                        )
-                                                    ]
+                            elif step==1:                        
+                                if text=="書本分類" :
+                                    columns=[]             
+                                    for i,k in enumerate(action):                                      
+                                        if (i+1)%3==0:
+                                            columns.append(
+                                                CarouselColumn(
+                                                    text=f'第二步：選擇{i-1}:{i+1}',
+                                                    actions=action[i-2:i+1]                                        
                                                 )
-                                            )                   
-                                    step=7
+                                            )
+                                    
+                                    carousel_template = CarouselTemplate(columns=columns)
+                                    message = TemplateSendMessage(alt_text='書本分類', template=carousel_template)
+                                    step+=1
+                                else:
+                                    if text!="其他":                            
+                                        columns=get_columns(text,booktype="")
+                                        carousel_template = CarouselTemplate(columns=columns)                                                    
+                                        message=TemplateSendMessage(alt_text='小說推薦', template=carousel_template),TextSendMessage(text="輸入任一鍵重新開始....")
+                                        step=0
+                                    
+                                    else:
+                                        message=TemplateSendMessage(
+                                                    alt_text='推薦',
+                                                    template=ButtonsTemplate(
+                                                        title='推薦與搜尋',
+                                                        text='第二步：請選擇分類',
+                                                        actions=[                                                    
+                                                            MessageTemplateAction(
+                                                                label='會員推薦',
+                                                                text='會員推薦',
+                                                            ),
+                                                            MessageTemplateAction(
+                                                                label='搜尋',
+                                                                text='搜尋',
+                                                            )
+                                                        ]
+                                                    )
+                                                )                   
+                                        step=7
+
                             elif step==2:
                                 user_sletype=text
                                 message=TemplateSendMessage(
@@ -230,6 +231,7 @@ def callback(request):
                                 step+=1
                             elif step==3:                        
                                 columns=get_columns(text,booktype=user_sletype)
+                                print("step3>>>>",text,user_sletype)
                                 carousel_template = CarouselTemplate(columns=columns)                                                    
                                 message=TemplateSendMessage(alt_text='小說推薦', template=carousel_template),TextSendMessage(text="輸入任一鍵重新開始....")
                                 step=0
