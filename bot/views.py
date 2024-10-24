@@ -20,6 +20,7 @@ step=0
 user_sletype=None
 adm_superuser=None
 adm_pw=None
+action,name=None,None
 def linebot_pbook(email):
     userinfo_instance = Creatuser.objects.filter(email=email).first()  
     userlike=Userlike.objects.filter(user=userinfo_instance)
@@ -36,7 +37,7 @@ def get_note_type():
     action=[]
     # MessageAction(label='選項1', text='選擇1')
     for i, d in enumerate(datas):
-        if i == 18:
+        if i == 19:
             break
         action.append(
             # MessageTemplateAction
@@ -113,7 +114,7 @@ def temalatemessage():
 # Create your views here.
 @csrf_exempt    
 def callback(request):
-    global step,user_sletype,adm_superuser,adm_pw
+    global step,user_sletype,adm_superuser,adm_pw,action,name
     if request.method=='POST':
         signature=request.META['HTTP_X_LINE_SIGNATURE']
         body=request.body.decode('utf-8')
@@ -167,7 +168,7 @@ def callback(request):
                                 step+=1
                             elif text=="書本分類" and step==1:                        
                                 columns=[]             
-                                for i,k in enumerate(action):                            
+                                for i,k in enumerate(action):                                      
                                     if (i+1)%3==0:
                                         columns.append(
                                             CarouselColumn(
@@ -175,6 +176,7 @@ def callback(request):
                                                 actions=action[i-2:i+1]                                        
                                             )
                                         )
+                                
                                 carousel_template = CarouselTemplate(columns=columns)
 
                                 message = TemplateSendMessage(alt_text='書本分類', template=carousel_template)
