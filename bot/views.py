@@ -117,8 +117,11 @@ def callback(request):
     global step,user_sletype,adm_superuser,adm_pw,action,name
     if request.method=='POST':
         signature=request.META['HTTP_X_LINE_SIGNATURE']
-        body=request.body.decode('utf-8')        
-        step = request.session.get('step', 0)
+        body=request.body.decode('utf-8')    
+        if "step" in request.session:
+            step=request.session["linestep"]
+        
+        print("----------star--------------")
         try:
             events=parse.parse(body,signature)
         except InvalidSignatureError:
@@ -126,16 +129,15 @@ def callback(request):
         except LineBotApiError:
             return HttpResponseBadRequest()
         for event in events:
-            if "step" in request.session:
-                step=request.session["step"]
+            
             # while True:            
             if isinstance(event.message, StickerMessage):  # 處理貼圖訊息
                     step=0
                     tempmessage=temalatemessage()
                     message=TextSendMessage(text="接收到貼圖，重新開始...."),tempmessage
-                    step+=1
-                    request.session['step'] = step
-                    print(step)
+                    step+=1                    
+                    request.session['linestep'] = step
+                    print("line>>>>step>>>>>",request.session['linestep'] , step)
                     line_bot_api.reply_message(event.reply_token,message) 
             elif isinstance(event,MessageEvent):  
                 text=event.message.text
@@ -143,19 +145,19 @@ def callback(request):
                 if text=="更新20241002":
                     adm_superuser="更新20241002"
                     step=90
-                    request.session['step'] = step
+                    
                 if adm_superuser=="更新20241002" and step==90:
                     if text=="getdatasnewinfo":                        
                         step=0                        
                         NavInfo().alltypeurl()
                         adm_superuser=None      
-                        request.session['step'] = step                  
+                        
                     if text=="離開" or text.lower()=="exit":
                         print(2)
                         step=0
                         adm_superuser=None
                         message = TextSendMessage(text="輸入任一鍵重新開始....")
-                        request.session['step'] = step
+                        
                     else:
                         if step==90:                            
                             message = TextSendMessage(text="輸入關鍵字，離開則輸入(exit)")
@@ -168,7 +170,7 @@ def callback(request):
                             message=temalatemessage()
                                         
                             step+=1
-                            request.session['step'] = step
+                            
                         else:
                             if step==0:
                                 message=temalatemessage()                                        
@@ -220,25 +222,41 @@ def callback(request):
 
                             elif step==2:
                                 user_sletype=text
-                                message=TemplateSendMessage(
-                                                alt_text='選擇排序',
-                                                template=ButtonsTemplate(
-                                                    title='排序',
-                                                    text='第三步：請選擇排序的依據',
-                                                    actions=[
-                                                        MessageTemplateAction(
-                                                            label='觀看數',
-                                                            text='觀看人數',
-                                                        ),
-                                                        MessageTemplateAction(
-                                                            label='收藏數',
-                                                            text='收藏人數',
-                                                        ),                                                
-                                                    ]
+                                a=True if user_sletype in name else False
+                                if a:
+                                    message=TemplateSendMessage(
+                                                    alt_text='選擇排序',
+                                                    template=ButtonsTemplate(
+                                                        title='排序',
+                                                        text='第三步：請選擇排序的依據',
+                                                        actions=[
+                                                            MessageTemplateAction(
+                                                                label='觀看數',
+                                                                text='觀看人數',
+                                                            ),
+                                                            MessageTemplateAction(
+                                                                label='收藏數',
+                                                                text='收藏人數',
+                                                            ),                                                
+                                                        ]
+                                                    )
+                                                )
+                                            
+                                    step+=1
+                                else:
+                                    columns=[]             
+                                    for i,k in enumerate(action):                                      
+                                        if (i+1)%3==0:
+                                            columns.append(
+                                                CarouselColumn(
+                                                    text=f'第二步：選擇{i-1}:{i+1}',
+                                                    actions=action[i-2:i+1]                                        
                                                 )
                                             )
-                                        
-                                step+=1
+                                    
+                                    carousel_template = CarouselTemplate(columns=columns)
+                                    message = TextSendMessage(text="輸入錯誤，請重新選擇～！"),TemplateSendMessage(alt_text='書本分類', template=carousel_template)
+
                                 
                             elif step==3:                        
                                 columns=get_columns(text,booktype=user_sletype)
@@ -283,8 +301,9 @@ def callback(request):
                         text = "輸入不正確，請重新輸入...."
                         message = TextSendMessage(text=text)
                         line_bot_api.reply_message(event.reply_token,message)
-                print(step)
-                request.session['step'] = step
+                
+                request.session['linestep'] = step
+                print("line>>>>step>>>>>",request.session['linestep'] , step)
                 line_bot_api.reply_message(event.reply_token,message)
         return HttpResponse()
     else:
