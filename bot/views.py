@@ -120,6 +120,8 @@ def callback(request):
         body=request.body.decode('utf-8')    
         if "step" in request.session:
             step=request.session["linestep"]
+        if "booktype" in request.session:
+            user_sletype=request.session["booktype"]
         
         print("----------star--------------")
         try:
@@ -221,8 +223,8 @@ def callback(request):
                                 
 
                             elif step==2:
-                                user_sletype=text
-                                a=True if user_sletype in name else False
+                                request.session["booktype"]=text                                
+                                a=True if request.session["booktype"] in name else False
                                 if a:
                                     message=TemplateSendMessage(
                                                     alt_text='選擇排序',
