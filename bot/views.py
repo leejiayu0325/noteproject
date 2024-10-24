@@ -17,7 +17,7 @@ from crawl.findnote import NavInfo
 line_bot_api = LineBotApi(settings.LINE_CHANNEL_TOKEN)
 parse=WebhookParser(settings.LINE_CHANNEL_SECRET)
 step=0
-user_sletype=None
+user_sletype=""
 adm_superuser=None
 adm_pw=None
 action,name=None,None
@@ -114,15 +114,19 @@ def temalatemessage():
 # Create your views here.
 @csrf_exempt    
 def callback(request):
-    global step,user_sletype,adm_superuser,adm_pw,action,name
+    global step,adm_superuser,adm_pw,action,name,user_sletype
     if request.method=='POST':
         signature=request.META['HTTP_X_LINE_SIGNATURE']
         body=request.body.decode('utf-8')    
+        
         if "step" in request.session:
             step=request.session["linestep"]
         if "booktype" in request.session:
             user_sletype=request.session["booktype"]
-        
+            print("haha~")
+
+        print("----------star--------------")
+        print(step,user_sletype)
         print("----------star--------------")
         try:
             events=parse.parse(body,signature)
@@ -223,8 +227,9 @@ def callback(request):
                                 
 
                             elif step==2:
-                                request.session["booktype"]=text                                
-                                a=True if request.session["booktype"] in name else False
+                                user_sletype=text                                
+                                print("選擇>>>",step,text)                        
+                                a=True if text in name else False
                                 if a:
                                     message=TemplateSendMessage(
                                                     alt_text='選擇排序',
@@ -260,9 +265,10 @@ def callback(request):
                                     message = TextSendMessage(text="輸入錯誤，請重新選擇～！"),TemplateSendMessage(alt_text='書本分類', template=carousel_template)
 
                                 
-                            elif step==3:                        
+                            elif step==3:                                          
+                                print("step3>>>>22222",text)
                                 columns=get_columns(text,booktype=user_sletype)
-                                print("step3>>>>",text,user_sletype)
+                                
                                 carousel_template = CarouselTemplate(columns=columns)                                                    
                                 message=TemplateSendMessage(alt_text='小說推薦', template=carousel_template),TextSendMessage(text="輸入任一鍵重新開始....")
                                 step=0
@@ -303,9 +309,10 @@ def callback(request):
                         text = "輸入不正確，請重新輸入...."
                         message = TextSendMessage(text=text)
                         line_bot_api.reply_message(event.reply_token,message)
-                
+                request.session["booktype"]=user_sletype
                 request.session['linestep'] = step
-                print("line>>>>step>>>>>",request.session['linestep'] , step)
+                                       
+                print("line>>>>step>>>>>booktype",request.session['linestep'] , step,request.session["booktype"])
                 line_bot_api.reply_message(event.reply_token,message)
         return HttpResponse()
     else:
