@@ -12,7 +12,7 @@ from linebot.models import TemplateSendMessage, ButtonsTemplate,MessageTemplateA
 
 from mynote.models import Notedatas,BookandUrl,PredRecommendBook,Userlike,PersonalInformation,Creatuser
 from crawl.findnote import NavInfo
-
+from bot.models import Linebotuser
 
 line_bot_api = LineBotApi(settings.LINE_CHANNEL_TOKEN)
 parse=WebhookParser(settings.LINE_CHANNEL_SECRET)
@@ -112,22 +112,11 @@ def temalatemessage():
     
 # Create your views here.
 @csrf_exempt    
-def callback(request):
-    global step,adm_superuser,adm_pw,action,name,user_sletype
-    if request.method=='POST':
+def callback(request):    
+    global adm_superuser,adm_pw,action,name    
+    if request.method=='POST':        
         signature=request.META['HTTP_X_LINE_SIGNATURE']
         body=request.body.decode('utf-8')    
-        
-        if "linestep" in request.session:
-            step=request.session["linestep"]
-            print(1)
-        if "booktype" in request.session:
-            user_sletype=request.session["booktype"]            
-            print(2)
-
-        print("----------star--------------")
-        print(step,user_sletype)
-        print("----------star--------------")
         try:
             events=parse.parse(body,signature)
         except InvalidSignatureError:
@@ -135,34 +124,50 @@ def callback(request):
         except LineBotApiError:
             return HttpResponseBadRequest()
         for event in events:
-            
             # while True:            
+            user_id = event.source.user_id   
+            sor=Linebotuser.objects.filter(user=user_id).first()
+            if not sor:
+                Linebotuser(user=user_id).save()
+                sor=Linebotuser.objects.filter(user=user_id).first()
+            step=sor.step
+            user_sletype=sor.booktype
+
+            print("----------star--------------")
+            print("起始點",step,user_sletype,type(step),type(user_sletype))        
+            print("----------star--------------")
             if isinstance(event.message, StickerMessage):  # 處理貼圖訊息
                     step=0
                     tempmessage=temalatemessage()
                     message=TextSendMessage(text="接收到貼圖，重新開始...."),tempmessage
                     step+=1                    
-                    request.session['linestep'] = step
-                    request.session["booktype"]=""
+                    if sor:
+                        sor.step=step
+                        sor.save()
                     line_bot_api.reply_message(event.reply_token,message) 
             elif isinstance(event,MessageEvent):  
                 text=event.message.text
                 action,name=get_note_type()
                 if text=="更新20241002":
-                    adm_superuser="更新20241002"
-                    step=90
-                    request.session["booktype"]=""
+                    if sor:
+                        sor.updatasstr=text
+                        sor.save()
                     
-                if adm_superuser=="更新20241002" and step==90:
-                    request.session["booktype"]=""
+                    step=90                    
+
+                if sor.updatasstr=="更新20241002" and step==90:
                     if text=="getdatasnewinfo":                        
-                        step=0                        
-                        NavInfo().alltypeurl()
-                        adm_superuser=None      
+                        step=0               
+                        NavInfo().alltypeurl() 
+                        if sor:
+                            sor.updatasstr=""
+                            sor.save()                       
                         
                     if text=="離開" or text.lower()=="exit":                        
-                        step=0
-                        adm_superuser=None
+                        step=0                        
+                        if sor:
+                            sor.updatasstr=""
+                            sor.save()
                         message = TextSendMessage(text="輸入任一鍵重新開始....")
                         
                     else:
@@ -174,13 +179,11 @@ def callback(request):
                     try:
                         if text=="離開" or text.lower()=="exit":                            
                             step=0
-                            request.session["booktype"]=""
                             message=temalatemessage()
                             step+=1
                             
                         else:
                             if step==0:
-                                request.session["booktype"]=""
                                 message=temalatemessage()                                        
                                 step+=1
                                 
@@ -272,19 +275,19 @@ def callback(request):
                                 carousel_template = CarouselTemplate(columns=columns)                                                    
                                 message=TemplateSendMessage(alt_text='小說推薦', template=carousel_template),TextSendMessage(text="輸入任一鍵重新開始....")
                                 step=0
-                                
+                                user_sletype=""
                             elif step==7:
                                 if text=="會員推薦":
                                     chtext="第三步：請輸入會員帳號(email)"                            
                                     message = TextSendMessage(text=chtext)
-                                    step=7.5
+                                    step=9
                                     
                                 else:
                                     searchtext="第三步：請輸入要搜尋的作者/書名"                            
                                     message = TextSendMessage(text=searchtext)
                                     step=8
                                 
-                            elif step==7.5:
+                            elif step==9:
                                 userinfo_instance = Creatuser.objects.filter(email=text).first()                
                                 sorse=PersonalInformation.objects.filter(email=userinfo_instance)
 
@@ -296,7 +299,7 @@ def callback(request):
                                 else:
                                     # 輸入任一鍵重新開始....
                                     message=TextSendMessage(text="輸入錯誤，沒有該會員，請先完成註冊～！"),TextSendMessage(text="請重新輸入或輸入「離開」重新開始....")
-                                    step=7.5
+                                    step=9
                                 
                             elif step==8:
                                 columns=get_columns("觀看人數",booktype="搜尋",searchkey=text)
@@ -311,9 +314,23 @@ def callback(request):
                         line_bot_api.reply_message(event.reply_token,message)
                 
                 line_bot_api.reply_message(event.reply_token,message)
-                request.session["booktype"]=user_sletype
-                request.session['linestep'] = step
-                print("line>>>>step>>>>>booktype",request.session['linestep'] , step,request.session["booktype"])
+                print("----------end--------------")
+                print("終止點",step,user_sletype)
+                print("----------end--------------")
+                
+                # sor=Linebotuser.objects.filter(user=user_id).first()
+                if sor:
+                    sor.step=step
+                    sor.booktype=user_sletype
+                    sor.save()
+                # else:
+                #     Linebotuser(
+                #         user=user_id,
+                #         step=step,
+                #         booktype=user_sletype
+                #     ).save()
+                # Linebotuser.objects.all().delete()
+                
         return HttpResponse()
     else:
         return HttpResponseBadRequest()
