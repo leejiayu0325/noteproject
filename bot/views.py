@@ -117,7 +117,7 @@ def callback(request):
     global step,user_sletype,adm_superuser,adm_pw,action,name
     if request.method=='POST':
         signature=request.META['HTTP_X_LINE_SIGNATURE']
-        body=request.body.decode('utf-8')
+        body=request.body.decode('utf-8')        
         try:
             events=parse.parse(body,signature)
         except InvalidSignatureError:
@@ -126,11 +126,14 @@ def callback(request):
             return HttpResponseBadRequest()
         for event in events:
             # while True:
+            step = request.session.get('step', 0)
             if isinstance(event.message, StickerMessage):  # 處理貼圖訊息
                     step=0
                     tempmessage=temalatemessage()
                     message=TextSendMessage(text="接收到貼圖，重新開始...."),tempmessage
                     step+=1
+                    request.session['step'] = step
+                    print(step)
                     line_bot_api.reply_message(event.reply_token,message) 
             elif isinstance(event,MessageEvent):  
                 text=event.message.text
@@ -138,17 +141,19 @@ def callback(request):
                 if text=="更新20241002":
                     adm_superuser="更新20241002"
                     step=90
-
+                    request.session['step'] = step
                 if adm_superuser=="更新20241002" and step==90:
                     if text=="getdatasnewinfo":                        
                         step=0                        
                         NavInfo().alltypeurl()
-                        adm_superuser=None                        
+                        adm_superuser=None      
+                        request.session['step'] = step                  
                     if text=="離開" or text.lower()=="exit":
                         print(2)
                         step=0
                         adm_superuser=None
                         message = TextSendMessage(text="輸入任一鍵重新開始....")
+                        request.session['step'] = step
                     else:
                         if step==90:                            
                             message = TextSendMessage(text="輸入關鍵字，離開則輸入(exit)")
@@ -161,11 +166,12 @@ def callback(request):
                             message=temalatemessage()
                                         
                             step+=1
+                            request.session['step'] = step
                         else:
                             if step==0:
-                                message=temalatemessage()
-                                        
+                                message=temalatemessage()                                        
                                 step+=1
+                                
                             elif step==1:                        
                                 if text=="書本分類" :
                                     columns=[]             
@@ -181,13 +187,14 @@ def callback(request):
                                     carousel_template = CarouselTemplate(columns=columns)
                                     message = TemplateSendMessage(alt_text='書本分類', template=carousel_template)
                                     step+=1
+                                    
                                 else:
                                     if text!="其他":                            
                                         columns=get_columns(text,booktype="")
                                         carousel_template = CarouselTemplate(columns=columns)                                                    
                                         message=TemplateSendMessage(alt_text='小說推薦', template=carousel_template),TextSendMessage(text="輸入任一鍵重新開始....")
                                         step=0
-                                    
+
                                     else:
                                         message=TemplateSendMessage(
                                                     alt_text='推薦',
@@ -207,6 +214,7 @@ def callback(request):
                                                     )
                                                 )                   
                                         step=7
+                                
 
                             elif step==2:
                                 user_sletype=text
@@ -229,21 +237,25 @@ def callback(request):
                                             )
                                         
                                 step+=1
+                                
                             elif step==3:                        
                                 columns=get_columns(text,booktype=user_sletype)
                                 print("step3>>>>",text,user_sletype)
                                 carousel_template = CarouselTemplate(columns=columns)                                                    
                                 message=TemplateSendMessage(alt_text='小說推薦', template=carousel_template),TextSendMessage(text="輸入任一鍵重新開始....")
                                 step=0
+                                
                             elif step==7:
                                 if text=="會員推薦":
                                     chtext="第三步：請輸入會員帳號(email)"                            
                                     message = TextSendMessage(text=chtext)
                                     step=7.5
+                                    
                                 else:
                                     searchtext="第三步：請輸入要搜尋的作者/書名"                            
                                     message = TextSendMessage(text=searchtext)
                                     step=8
+                                
                             elif step==7.5:
                                 userinfo_instance = Creatuser.objects.filter(email=text).first()                
                                 sorse=PersonalInformation.objects.filter(email=userinfo_instance)
@@ -270,6 +282,7 @@ def callback(request):
                         message = TextSendMessage(text=text)
                         line_bot_api.reply_message(event.reply_token,message)
                 print(step)
+                request.session['step'] = step
                 line_bot_api.reply_message(event.reply_token,message)
         return HttpResponse()
     else:
