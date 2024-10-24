@@ -20,7 +20,7 @@ import urllib.parse
 import os
 import json
 # Create your views here.
-locurl="https://nxn-f20ab8cab4ea.herokuapp.com/"
+locurl="https://nxn-f20ab8cab4ea.herokuapp.com"
 def index(request):    
     if request.method=="POST":        
         response =redirect(reverse('index')) 
