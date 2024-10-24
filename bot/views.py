@@ -36,13 +36,13 @@ def get_note_type():
     action=[]
     # MessageAction(label='選項1', text='選擇1')
     for i, d in enumerate(datas):
-        if i == 19:
+        if i == 18:
             break
         action.append(
             # MessageTemplateAction
             MessageAction(label=f'{d.urlname}',text=f'{d.urlname}'))
         name.append(d.urlname)
-    
+    print(name)
     return action,name
     # return actions
 def get_columns(text,booktype="",searchkey=""):
@@ -265,7 +265,7 @@ def callback(request):
                         text = "輸入不正確，請重新輸入...."
                         message = TextSendMessage(text=text)
                         line_bot_api.reply_message(event.reply_token,message)
-                
+                print(step)
                 line_bot_api.reply_message(event.reply_token,message)
         return HttpResponse()
     else:
