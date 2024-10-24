@@ -122,8 +122,7 @@ def callback(request):
         if "step" in request.session:
             step=request.session["linestep"]
         if "booktype" in request.session:
-            user_sletype=request.session["booktype"]
-            print("haha~")
+            user_sletype=request.session["booktype"]            
 
         print("----------star--------------")
         print(step,user_sletype)
@@ -143,7 +142,6 @@ def callback(request):
                     message=TextSendMessage(text="接收到貼圖，重新開始...."),tempmessage
                     step+=1                    
                     request.session['linestep'] = step
-                    print("line>>>>step>>>>>",request.session['linestep'] , step)
                     line_bot_api.reply_message(event.reply_token,message) 
             elif isinstance(event,MessageEvent):  
                 text=event.message.text
@@ -158,8 +156,7 @@ def callback(request):
                         NavInfo().alltypeurl()
                         adm_superuser=None      
                         
-                    if text=="離開" or text.lower()=="exit":
-                        print(2)
+                    if text=="離開" or text.lower()=="exit":                        
                         step=0
                         adm_superuser=None
                         message = TextSendMessage(text="輸入任一鍵重新開始....")
@@ -227,8 +224,7 @@ def callback(request):
                                 
 
                             elif step==2:
-                                user_sletype=text                                
-                                print("選擇>>>",step,text)                        
+                                user_sletype=text                                 
                                 a=True if text in name else False
                                 if a:
                                     message=TemplateSendMessage(
@@ -265,8 +261,7 @@ def callback(request):
                                     message = TextSendMessage(text="輸入錯誤，請重新選擇～！"),TemplateSendMessage(alt_text='書本分類', template=carousel_template)
 
                                 
-                            elif step==3:                                          
-                                print("step3>>>>22222",text)
+                            elif step==3:                                                                          
                                 columns=get_columns(text,booktype=user_sletype)
                                 
                                 carousel_template = CarouselTemplate(columns=columns)                                                    
