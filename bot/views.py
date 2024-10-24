@@ -126,6 +126,8 @@ def callback(request):
         except LineBotApiError:
             return HttpResponseBadRequest()
         for event in events:
+            if "step" in request.session:
+                step=request.session["step"]
             # while True:            
             if isinstance(event.message, StickerMessage):  # 處理貼圖訊息
                     step=0
