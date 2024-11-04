@@ -194,10 +194,11 @@ if __name__=="__main__":
     #         randomnumber="1687",
     #         chickemail=True
     #     ).save()
-    author="白清清"
-    file_name="毒舌上司兼青梅竹马.txt"
-    book_url="https://czbooks.net/n/cri4j"
-    txtfilepath=os.path.join(settings.BASE_DIR, 'static', 'txt',author, file_name)        
+    author="官方小編"
+    file_name="作者專屬許願池.txt"
+    book_url="https://czbooks.net/n/cr459"
+    textf=f"/app/static/txt/{author}/{file_name}"
+    # txtfilepath=os.path.join(settings.BASE_DIR, 'static', 'txt',author, file_name)        
     notedatas_instance = Notedatas.objects.filter(bookurl=book_url).first()                
-    NotePath(bookurl=notedatas_instance,filepath=txtfilepath).save()
+    NotePath(bookurl=notedatas_instance,filepath=textf).save()
     # NotePath(bookurl=notedatas_instance,filepath=txtfilepath).delete()
