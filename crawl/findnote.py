@@ -148,7 +148,7 @@ class crawNote():
     # 進入章節內取得內容
     def getstr(self,a_urlinfo):                
         orderby,url=a_urlinfo
-        delay = random.uniform(10, 50)
+        delay = random.uniform(10, 30)
         # print(f"Fetching {url} after a delay of {delay:.2f} seconds")
         time.sleep(delay)
         soup=get_soup(url)

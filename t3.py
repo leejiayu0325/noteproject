@@ -18,6 +18,7 @@ os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'note.settings')  # 替換為你
 django.setup()
 from mynote.models import Notedatas,Userlike,PredRecommendBook,Creatuser,NoteLisData,NotePath,DonloadBookandUser
 from crawl.findnote import NoteLis
+from django.conf import settings
 from django.contrib.auth.hashers import make_password,check_password
 
 
@@ -180,16 +181,23 @@ if __name__=="__main__":
     # email="ee456214@gmail.com"
     # # a=Creatuser.objects.filter(email=email)
     # sore=Creatuser.objects.filter(email=email).first()
-    encrypted_password = make_password("123A456789")
-    # sore.password=encrypted_password
-    # sore.save()
-    # print(a)
-    # a.delete()
-    # print(a.count)
-    Creatuser(
-            user="陳曉明",
-            email="cji3ux06@gmail.com",
-            password=encrypted_password,
-            randomnumber="1687",
-            chickemail=True
-        ).save()
+    # encrypted_password = make_password("123A456789")
+    # # sore.password=encrypted_password
+    # # sore.save()
+    # # print(a)
+    # # a.delete()
+    # # print(a.count)
+    # Creatuser(
+    #         user="陳曉明",
+    #         email="cji3ux06@gmail.com",
+    #         password=encrypted_password,
+    #         randomnumber="1687",
+    #         chickemail=True
+    #     ).save()
+    author="白清清"
+    file_name="毒舌上司兼青梅竹马.txt"
+    book_url="https://czbooks.net/n/cri4j"
+    txtfilepath=os.path.join(settings.BASE_DIR, 'static', 'txt',author, file_name)        
+    notedatas_instance = Notedatas.objects.filter(bookurl=book_url).first()                
+    NotePath(bookurl=notedatas_instance,filepath=txtfilepath).save()
+    # NotePath(bookurl=notedatas_instance,filepath=txtfilepath).delete()

@@ -571,15 +571,15 @@ def download(request):
         
         if 'useremail' in request.session:
             useremail=request.session["useremail"]
-        try:
+        
             # 紀錄下載資訊 
-            try:
-                userinfo_instance = Creatuser.objects.filter(email=useremail).first()  
-                notedatas_instance = Notedatas.objects.filter(bookurl=book_url).first()
-                DonloadBookandUser(user=userinfo_instance,bookurl=notedatas_instance).save()
-            except Exception as e:
-                print(e)
-
+        try:
+            userinfo_instance = Creatuser.objects.filter(email=useremail).first()  
+            notedatas_instance = Notedatas.objects.filter(bookurl=book_url).first()
+            DonloadBookandUser(user=userinfo_instance,bookurl=notedatas_instance).save()
+        except Exception as e:
+            print(e)
+        try:
             author=Notedatas.objects.filter(bookurl=book_url).first().author.replace("?","").replace("/","_")
             directory = os.path.join(settings.BASE_DIR, 'static', 'txt',author) 
             # print(directory)       
