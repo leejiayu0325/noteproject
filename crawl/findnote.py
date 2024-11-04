@@ -148,7 +148,7 @@ class crawNote():
     # 進入章節內取得內容
     def getstr(self,a_urlinfo):                
         orderby,url=a_urlinfo
-        delay = random.uniform(1, 5)
+        delay = random.uniform(10, 50)
         # print(f"Fetching {url} after a delay of {delay:.2f} seconds")
         time.sleep(delay)
         soup=get_soup(url)
@@ -194,7 +194,7 @@ class listNoteDowl():
         
     # 進入章節內取得內容
     def getstr(self,a_urlinfo):  
-        delay = random.uniform(1, 5)
+        delay = random.uniform(10, 50)
         # print(f"Fetching {url} after a delay of {delay:.2f} seconds")
         time.sleep(delay)            
 
@@ -286,7 +286,7 @@ class NavInfo():
     def getnoteinfo(self,url):
         
         bookstate=True if "finish" in url else False
-        delay = random.uniform(1, 5)        
+        delay = random.uniform(10, 30)        
         time.sleep(delay)        
         soup=get_soup(url)             
         booktype=soup.find("div",class_="novel-list-function").find("ul",class_="nav").find_all("li")[-1].text.strip().split("\n")[0]
