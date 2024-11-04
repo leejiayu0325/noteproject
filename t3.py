@@ -18,6 +18,7 @@ os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'note.settings')  # 替換為你
 django.setup()
 from mynote.models import Notedatas,Userlike,PredRecommendBook,Creatuser,NoteLisData,NotePath,DonloadBookandUser
 from crawl.findnote import NoteLis
+from django.contrib.auth.hashers import make_password,check_password
 
 
 class SVM_recommendedBook():
@@ -176,7 +177,19 @@ if __name__=="__main__":
     # for i in a:
     #     print(i.no,">>>",i.booklisurl)
     # 
-    a=Creatuser.objects.filter(email=email)
-    print(a)
-    a.delete()
-    print(a.count)
+    # email="ee456214@gmail.com"
+    # # a=Creatuser.objects.filter(email=email)
+    # sore=Creatuser.objects.filter(email=email).first()
+    encrypted_password = make_password("123A456789")
+    # sore.password=encrypted_password
+    # sore.save()
+    # print(a)
+    # a.delete()
+    # print(a.count)
+    Creatuser(
+            user="陳曉明",
+            email="cji3ux06@gmail.com",
+            password=encrypted_password,
+            randomnumber="1687",
+            chickemail=True
+        ).save()

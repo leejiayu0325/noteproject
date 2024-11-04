@@ -1,4 +1,4 @@
-from django.shortcuts import render,redirect,HttpResponse
+from django.shortcuts import render,redirect,HttpResponse,HttpResponseRedirect
 from django.urls import reverse
 from django.template.loader import render_to_string
 from django.http import JsonResponse
@@ -571,54 +571,57 @@ def download(request):
         
         if 'useremail' in request.session:
             useremail=request.session["useremail"]
-        # 紀錄下載資訊 
         try:
-            userinfo_instance = Creatuser.objects.filter(email=useremail).first()  
-            notedatas_instance = Notedatas.objects.filter(bookurl=book_url).first()
-            DonloadBookandUser(user=userinfo_instance,bookurl=notedatas_instance).save()
-        except Exception as e:
-            print(e)
+            # 紀錄下載資訊 
+            try:
+                userinfo_instance = Creatuser.objects.filter(email=useremail).first()  
+                notedatas_instance = Notedatas.objects.filter(bookurl=book_url).first()
+                DonloadBookandUser(user=userinfo_instance,bookurl=notedatas_instance).save()
+            except Exception as e:
+                print(e)
 
-        author=Notedatas.objects.filter(bookurl=book_url).first().author.replace("?","").replace("/","_")
-        directory = os.path.join(settings.BASE_DIR, 'static', 'txt',author) 
-        # print(directory)       
-        # 如果路徑不存在則創建資料夾
-        if not os.path.exists(directory):
-            os.makedirs(directory)
+            author=Notedatas.objects.filter(bookurl=book_url).first().author.replace("?","").replace("/","_")
+            directory = os.path.join(settings.BASE_DIR, 'static', 'txt',author) 
+            # print(directory)       
+            # 如果路徑不存在則創建資料夾
+            if not os.path.exists(directory):
+                os.makedirs(directory)
 
-                
-        txtfilepath=os.path.join(settings.BASE_DIR, 'static', 'txt',author, file_name)        
-        notefilepath=NotePath.objects.filter(bookurl=book_url).first()
-        lispath=NoteLisData.objects.filter(bookurl=book_url)
+                    
+            txtfilepath=os.path.join(settings.BASE_DIR, 'static', 'txt',author, file_name)        
+            notefilepath=NotePath.objects.filter(bookurl=book_url).first()
+            lispath=NoteLisData.objects.filter(bookurl=book_url)
+            
+            # 建立路徑及下載檔案
+            if not notefilepath:
+                if lispath:                
+                    crawStore=listNoteDowl(lispath)
+                else:                          
+                    # 小說狂人-爬資料
+                    crawStore=crawNote(book_url)
+                note=crawStore.ok()            
+                with open(txtfilepath, 'w',encoding="utf-8") as f:
+                    f.write(note)
+                # 紀錄檔案路徑
+                notedatas_instance = Notedatas.objects.filter(bookurl=book_url).first()                
+                NotePath(bookurl=notedatas_instance,filepath=txtfilepath).save()
+            else:                  
+                notepath=notefilepath.filepath
+                with open(notepath,"r",encoding="UTF-8") as f:
+                    note=f.read()
+            # 思兔
+            # crawStore=SiTo_dowlond(book_url)
+            # note=crawStore.get_note_str()
+            # 確保內容以 UTF-8 編碼
+            content = note.encode('utf-8')
+            
+            # 返回文本檔給用戶
+            response = HttpResponse(content, content_type='text/plain; charset=utf-8')
+            response['Content-Disposition'] = f'attachment; filename="{file_name}"'
         
-        # 建立路徑及下載檔案
-        if not notefilepath:
-            if lispath:                
-                crawStore=listNoteDowl(lispath)
-            else:                          
-                # 小說狂人-爬資料
-                crawStore=crawNote(book_url)
-            note=crawStore.ok()            
-            with open(txtfilepath, 'w',encoding="utf-8") as f:
-                f.write(note)
-            # 紀錄檔案路徑
-            notedatas_instance = Notedatas.objects.filter(bookurl=book_url).first()                
-            NotePath(bookurl=notedatas_instance,filepath=txtfilepath).save()
-        else:                  
-            notepath=notefilepath.filepath
-            with open(notepath,"r",encoding="UTF-8") as f:
-                note=f.read()
-        # 思兔
-        # crawStore=SiTo_dowlond(book_url)
-        # note=crawStore.get_note_str()
-        # 確保內容以 UTF-8 編碼
-        content = note.encode('utf-8')
-        
-        # 返回文本檔給用戶
-        response = HttpResponse(content, content_type='text/plain; charset=utf-8')
-        response['Content-Disposition'] = f'attachment; filename="{file_name}"'
-        
-        return response
+            return response
+        except:
+            return HttpResponse("僅支持 POST 請求", status=405)
     else:
         return HttpResponse("僅支持 POST 請求", status=405)
 # 9/27 各分類頁面
@@ -677,19 +680,23 @@ def notelist(request):
     if request.method=="POST":
         bookurl=request.POST.get("bookurl")        
         # 細項書籍連結
-        sorse=NoteLisData.objects.filter(bookurl=bookurl).select_related('bookurl').order_by("no")
-        bookstate=Notedatas.objects.filter(bookurl=bookurl).first()
-        # if not bookstate:
-        #     # 非完結本刪除細項重新抓取
-        #     NoteLisData.objects.filter(bookurl=bookstate).delete()
-        
-        if not sorse:                        
-            NoteLis(bookurl)
+        try:
             sorse=NoteLisData.objects.filter(bookurl=bookurl).select_related('bookurl').order_by("no")
-        
-        # findbook=NoteLisData.objects.filter(bookurl=url).select_related('bookurl')
-        bookname=sorse.first().bookurl.bookname        
-        bookurl=sorse.first().bookurl.bookurl
+            bookstate=Notedatas.objects.filter(bookurl=bookurl).first()
+            # if not bookstate:
+            #     # 非完結本刪除細項重新抓取
+            #     NoteLisData.objects.filter(bookurl=bookstate).delete()
+            
+            if not sorse:                        
+                NoteLis(bookurl)
+                sorse=NoteLisData.objects.filter(bookurl=bookurl).select_related('bookurl').order_by("no")
+            
+            # findbook=NoteLisData.objects.filter(bookurl=url).select_related('bookurl')
+            bookname=sorse.first().bookurl.bookname        
+            bookurl=sorse.first().bookurl.bookurl
+        except:
+            bookname=Notedatas.objects.filter(bookurl=bookurl).first().bookname
+            return HttpResponseRedirect(bookurl)
         context["bookname"]=bookname
         context["bookurl"]=bookurl
         context["notelist"]=sorse
