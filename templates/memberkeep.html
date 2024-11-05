@@ -15,10 +15,18 @@
               <form action="" method="post">
                 {% csrf_token %}
                 <input type="hidden" name="hiddenpage" value="{{ currentPage }}">
-                <!-- 按觀看數排序 -->
-                <button type="submit" name="sort_by" value="watch" class="btn btn-primary">觀看數</button>
+                <!-- 按觀看數排序-->
+                {% if request.session.watch%}
+                    <button type="submit" name="sort_by" value="watch" class="btn btn-primary">觀看數</button>
+                {%else%}
+                    <button type="submit" name="sort_by" value="watch" class="btn btn-secondary">觀看數</button>
+                {%endif%}
                 <!-- 按收藏數排序 -->
-                <button type="submit" name="sort_by" value="keep" class="btn btn-secondary">收藏數</button>
+                {% if request.session.keep%}
+                    <button type="submit" name="sort_by" value="keep" class="btn btn-primary">收藏數</button>
+                {%else%}
+                    <button type="submit" name="sort_by" value="keep" class="btn btn-secondary">收藏數</button>
+                {%endif%}
               </form>          
             
           </div>

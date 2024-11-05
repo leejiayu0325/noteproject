@@ -79,6 +79,23 @@ Version      : 1.0
 @import url("https://fonts.googleapis.com/css?family=Montserrat:300,400,700|Lato:400,600,700");
 @import url("https://fonts.googleapis.com/css?family=Lora:400,700|Open+Sans|Unna:400,700&display=swap");
 
+.keep {
+  background: #5c5a5a;
+  /* 預設背景色 */
+  color: #f8f4f4;
+  /* 預設文字色 */
+}
+
+.keep.favorited {
+  background: #d48815;
+  /* 收藏後的背景色 */
+  color: #f8054e;
+  /* 收藏後的文字色 */
+  cursor: not-allowed;
+  /* 禁用游標 */
+}
+
+/*-----------------------------------*/
 .img-view {
   display: block;
   margin: 0 auto;

@@ -43,7 +43,14 @@ document.addEventListener('DOMContentLoaded', function () {
             })
                 .then(response => response.json())
                 .then(data => {
-                    console.log(data.message);  // 在控制台印出提示訊息
+                    console.log(data.message);
+                    if (data.is_favorited) {
+                        button.innerHTML = '&#9829;';  // 實心愛心
+                        button.classList.add('favorited');  // 加上已收藏的樣式
+                    } else {
+                        button.innerHTML = '&#9825;';  // 空心愛心
+                        button.classList.remove('favorited');  // 移除已收藏的樣式
+                    }  // 在控制台印出提示訊息
                 })
                 .catch(error => {
                     console.error('Error:', error);

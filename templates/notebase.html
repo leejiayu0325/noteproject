@@ -15,9 +15,17 @@
               {% csrf_token %}
               <input type="hidden" name="hiddenpage" value="{{ currentPage }}">
               <!-- 按觀看數排序 -->
-              <button type="submit" name="sort_by" value="watch" class="btn btn-primary">觀看數</button>
-              <!-- 按收藏數排序 -->
-              <button type="submit" name="sort_by" value="keep" class="btn btn-secondary">收藏數</button>
+              {% if request.session.watch%}
+                    <button type="submit" name="sort_by" value="watch" class="btn btn-primary">觀看數</button>
+                {%else%}
+                    <button type="submit" name="sort_by" value="watch" class="btn btn-secondary">觀看數</button>
+                {%endif%}
+                <!-- 按收藏數排序 -->
+                {% if request.session.keep%}
+                    <button type="submit" name="sort_by" value="keep" class="btn btn-primary">收藏數</button>
+                {%else%}
+                    <button type="submit" name="sort_by" value="keep" class="btn btn-secondary">收藏數</button>
+                {%endif%}
             </form>          
           
         </div>
@@ -47,8 +55,8 @@
               <div>
                 <span class="text-muted letter-spacing text-uppercase font-sm ">觀看:{{listdatas.watch}}</span>
                 <span class="text-muted letter-spacing text-uppercase font-sm" style="margin-left:15px;">收藏:{{listdatas.keep}}</span>
-                {% if request.session.loginok %}
-                <button class="keep btn btn-i btn-r" data-bookurl="{{listdatas.bookurl}}" data-bookname="{{listdatas.bookname}}">收藏</button>
+                {% if request.session.loginok %}                
+                <button class="keep btn btn-r " data-bookurl="{{listdatas.bookurl}}" data-bookname="{{listdatas.bookname}}" id="favorite-icon" >&#9825;</button>
                 {% endif %}
               </div>
               {% if request.session.loginok %}

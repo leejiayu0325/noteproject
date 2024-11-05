@@ -537,7 +537,18 @@ def keep(request):
         try:          
             userinfo_instance = Creatuser.objects.filter(email=useremail).first()  
             notedatas_instance = Notedatas.objects.filter(bookurl=book_url).first()
-            Userlike(user=userinfo_instance,bookurl=notedatas_instance).save()
+            userlike=Userlike.objects.filter(user=userinfo_instance,bookurl=notedatas_instance).first()
+            if userlike:
+                print(1)
+                userlike.delete()
+                favorited=False
+                message="已取消收藏"
+            else:
+                print(2)
+                Userlike(user=userinfo_instance,bookurl=notedatas_instance).save()
+                favorited=True
+                message="已收藏"
+            return JsonResponse({'is_favorited': favorited, 'message': message})
         except Exception as e:
             print(e)
     return JsonResponse({'error': 'POST 請求缺少 book_url 參數'})
@@ -631,14 +642,19 @@ def download(request):
 # 9/27搜尋結果---需先建立資料庫
 def searchanser(request):
     searchword=None
-    booktype="搜尋"
-    if request.method=="POST":
-        searchword=request.POST.get("searchword").strip().replace(" ","")
-
-    if searchword!=None:
-        request.session["searchword"]=searchword
-    if "searchword" in request.session:
-        keyword=request.session["searchword"]
+    booktype="搜尋"    
+    context={}
+    if request.method=="POST":        
+        print("POST",request.POST.get("searchword"))
+        if request.POST.get("searchword")!=None:
+            keyword=request.POST.get("searchword").strip().replace(" ","")
+            request.session["searchword"]=keyword
+        else:
+            if "searchword" in request.session:
+                keyword=request.session["searchword"]
+    else:
+        if "searchword" in request.session:
+            keyword=request.session["searchword"]
       
     context=note_universal_template(request,booktype,keyword)
     return render(request,"notebase.html",context)
@@ -845,12 +861,32 @@ def get_page_range(paginator,currentPage):
 def note_universal_template(req,booktype,searchkey=""): 
     sort_by = 'bookname'   
     context={}    
+    if 'useremail' in req.session:
+        useremail=req.session['useremail']
+        # 判斷是否收藏書籍
+        userinfo_instance = Creatuser.objects.filter(email=useremail).first()  
+        user_likes =Userlike.objects.filter(user=useremail).values_list('bookurl__bookurl', flat=True) 
+        
+        print(user_likes)
+        context['user_likes']: list(user_likes)
+        # if "https://czbooks.net/n/cp4kl6p" in user_likes:
+        #     print("存在")
+
     if req.method=="POST":
         if req.POST.get("sort_by")!=None:
             sort_by=req.POST.get("sort_by")
             req.session["sort_by"]=sort_by
+            if sort_by=="watch":
+                req.session["watch"]=True
+                req.session["keep"]=False
+            else:
+                req.session["watch"]=False
+                req.session["keep"]=True
+            
         else:
             req.session["sort_by"]="bookname"
+            req.session["watch"]=False
+            req.session["keep"]=False
         try:
             if req.POST.get("hiddenpage")!=None:
                 page=req.POST.get("hiddenpage")
@@ -863,19 +899,16 @@ def note_universal_template(req,booktype,searchkey=""):
 
     if "sort_by" in req.session:
         sort_by=req.session["sort_by"]
+
     # 取得資料庫全部資料
     if booktype=="全部":
         alldatas=Notedatas.objects.all().order_by(sort_by)
     elif booktype=="搜尋":
         alldatas=Notedatas.objects.filter(Q(bookname__contains=searchkey)|Q(author__contains=searchkey)).order_by(sort_by)
-    elif booktype=="會員收藏":
-        if 'useremail' in req.session:
-            useremail=req.session['useremail']
+    elif booktype=="會員收藏":        
         userinfo_instance = Creatuser.objects.filter(email=useremail).first()    
         alldatas=Userlike.objects.filter(user=userinfo_instance).select_related('bookurl').order_by(f'-bookurl__{sort_by}')                    
-    elif booktype=="會員下載":
-        if 'useremail' in req.session:
-            useremail=req.session['useremail']
+    elif booktype=="會員下載":        
         userinfo_instance = Creatuser.objects.filter(email=useremail).first()    
         alldatas=DonloadBookandUser.objects.filter(user=userinfo_instance).select_related('bookurl').order_by(f'-bookurl__{sort_by}')                    
     else:    
@@ -885,6 +918,8 @@ def note_universal_template(req,booktype,searchkey=""):
         alldatas=alldatas.order_by(f"-bookurl__{sort_by}")
     else:
         alldatas=alldatas.order_by(f"-{sort_by}")
+
+    # 分頁處理
     currentPage=int(page)#當前頁數
     
     # 將取得的資料作分頁處理
