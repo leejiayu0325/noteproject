@@ -25,8 +25,8 @@
                             <h5><a href="#" onclick="submitForm('{{ ktop.bookurl }}')" >{{ktop.bookname|truncatechars:10}}</a></h5>
                             <span class="text-muted letter-spacing text-uppercase font-sm">作者：<a href="{{ktop.authorurl}}" target="_blank">{{ktop.author|truncatechars:10}}</a></span>                            
                             <h6 class="text-muted letter-spacing text-uppercase font-sm">分類：{{ktop.booktype|truncatechars:10}}</h6>
-                            {% if request.session.loginok %}
-                            <button class="keep btn btn-i btn-r text-center" data-bookurl="{{ktop.bookurl}}" data-bookname="{{ktop.bookname}}">收藏</button>
+                            {% if request.session.loginok %}                            
+                            <button class="keep btn btn-r text-center" data-bookurl="{{ktop.bookurl}}" data-bookname="{{ktop.bookname}}"id="favorite-icon" >&#9825;</button>
                             {% endif %}
                         </div>
                     </div>
@@ -50,8 +50,8 @@
                                     <h5><a href="#" onclick="submitForm('{{ ktop.bookurl }}')" >{{ktop.bookname|truncatechars:10}}</a></h5>
                                     <span class="text-muted letter-spacing text-uppercase font-sm">作者：<a href="{{ktop.authorurl}}" target="_blank">{{ktop.author|truncatechars:10}}</a></span>                            
                                     <h6 class="text-muted letter-spacing text-uppercase font-sm">分類：{{ktop.booktype|truncatechars:10}}</h6>
-                                    {% if request.session.loginok %}
-                                    <button class="keep btn btn-i btn-r text-center" data-bookurl="{{ktop.bookurl}}" data-bookname="{{ktop.bookname}}">收藏</button>
+                                    {% if request.session.loginok %}                                    
+                                    <button class="keep btn btn-r text-center" data-bookurl="{{ktop.bookurl}}" data-bookname="{{ktop.bookname}}" id="favorite-icon" >&#9825;</button>
                                     {% endif %}
                                 </div>
                             </div>
@@ -68,8 +68,8 @@
                                     <h5><a href="#" onclick="submitForm('{{ ktop.bookurl }}')" >{{ktop.bookurl.bookname|truncatechars:10}}</a></h5>
                                     <span class="text-muted letter-spacing text-uppercase font-sm">作者：<a href="{{ktop.bookurl.authorurl}}" target="_blank">{{ktop.bookurl.author|truncatechars:10}}</a></span>                            
                                     <h6 class="text-muted letter-spacing text-uppercase font-sm">分類：{{ktop.bookurl.booktype|truncatechars:10}}</h6>
-                                    {% if request.session.loginok %}
-                                    <button class="keep btn btn-i btn-r text-center" data-bookurl="{{ktop.bookurl.bookurl}}" data-bookname="{{ktop.bookurl.bookname}}">收藏</button>
+                                    {% if request.session.loginok %}                                    
+                                    <button class="keep btn btn-r text-center" data-bookurl="{{ktop.bookurl.bookurl}}" data-bookname="{{ktop.bookurl.bookname}}" id="favorite-icon" >&#9825;</button>
                                     {% endif %}
                                 </div>
                             </div>
@@ -92,8 +92,8 @@
                                 <h5><a href="#" onclick="submitForm('{{ wtop.bookurl }}')" >{{wtop.bookname|truncatechars:10}}</a></h5>
                                 <span class="text-muted letter-spacing text-uppercase font-sm">作者：<a href="{{wtop.authorurl}}" target="_blank">{{wtop.author|truncatechars:10}}</a></span>                            
                                 <h6 class="text-muted letter-spacing text-uppercase font-sm">分類：{{wtop.booktype|truncatechars:10}}</h6>
-                                {% if request.session.loginok %}
-                                <button class="keep btn btn-i btn-r text-center" data-bookurl="{{wtop.bookurl}}" data-bookname="{{wtop.bookname}}">收藏</button>
+                                {% if request.session.loginok %}                                
+                                <button class="keep btn btn-r text-center" data-bookurl="{{wtop.bookurl}}" data-bookname="{{wtop.bookname}}" id="favorite-icon" >&#9825;</button>
                                 {% endif %}
                             </div>
                         </div>
@@ -110,8 +110,8 @@
                                     <h5><a href="#" onclick="submitForm('{{ ktop.bookurl }}')" >{{ktop.bookurl.bookname|truncatechars:10}}</a></h5>
                                     <span class="text-muted letter-spacing text-uppercase font-sm">作者：<a href="{{ktop.bookurl.authorurl}}" target="_blank">{{ktop.bookurl.author|truncatechars:10}}</a></span>                            
                                     <h6 class="text-muted letter-spacing text-uppercase font-sm">分類：{{ktop.bookurl.booktype|truncatechars:10}}</h6>
-                                    {% if request.session.loginok %}
-                                    <button class="keep btn btn-i btn-r text-center" data-bookurl="{{ktop.bookurl.bookurl}}" data-bookname="{{ktop.bookurl.bookname}}">收藏</button>
+                                    {% if request.session.loginok %}                                    
+                                    <button class="keep btn btn-r text-center" data-bookurl="{{ktop.bookurl.bookurl}}" data-bookname="{{ktop.bookurl.bookname}}" id="favorite-icon" >&#9825;</button>
                                     {% endif %}
                                 </div>
                             </div>
@@ -134,8 +134,8 @@
                             <h5><a href="#" onclick="submitForm('{{ wtop.bookurl }}')" >{{wtop.bookname|truncatechars:10}}</a></h5>
                             <span class="text-muted letter-spacing text-uppercase font-sm">作者：<a href="{{wtop.authorurl}}" target="_blank">{{wtop.author|truncatechars:10}}</a></span>                            
                             <h6 class="text-muted letter-spacing text-uppercase font-sm">分類：{{wtop.booktype|truncatechars:10}}</h6>
-                            {% if request.session.loginok %}
-                            <button class="keep btn btn-i btn-r text-center" data-bookurl="{{wtop.bookurl}}" data-bookname="{{wtop.bookname}}">收藏</button>
+                            {% if request.session.loginok %}                            
+                            <button class="keep btn btn-r text-center" data-bookurl="{{wtop.bookurl}}" data-bookname="{{wtop.bookname}}" id="favorite-icon" >&#9825;</button>
                             {% endif %}
                         </div>
                     </div>

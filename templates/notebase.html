@@ -55,7 +55,7 @@
               <div>
                 <span class="text-muted letter-spacing text-uppercase font-sm ">觀看:{{listdatas.watch}}</span>
                 <span class="text-muted letter-spacing text-uppercase font-sm" style="margin-left:15px;">收藏:{{listdatas.keep}}</span>
-                {% if request.session.loginok %}                
+                {% if request.session.loginok %}                     
                 <button class="keep btn btn-r " data-bookurl="{{listdatas.bookurl}}" data-bookname="{{listdatas.bookname}}" id="favorite-icon" >&#9825;</button>
                 {% endif %}
               </div>

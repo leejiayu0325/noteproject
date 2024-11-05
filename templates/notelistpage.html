@@ -11,8 +11,8 @@
 		<div class="sidebar-widget category mb-5">            
 			<h4 class="text-center widget-title">{{bookname}}</h4>
 			{%if notelist%}
-				{% if request.session.loginok %}
-					<button class="keep btn btn-i " data-bookurl="{{bookurl}}" data-bookname="{{bookname}}">收藏</button>
+				{% if request.session.loginok %}					
+					<button class="keep btn btn-r " data-bookurl="{{bookurl}}" data-bookname="{{bookname}}"id="favorite-icon" >&#9825;</button>
 				{% endif %}
 				<ul class="list-unstyled">
 					{% for nlis in notelist %}

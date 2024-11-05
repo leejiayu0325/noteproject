@@ -258,8 +258,8 @@
                             <form id="form-{{ pbook.bookurl.bookurl }}" action="{% url 'notelist' %}" method="POST" style="display: none;">
                                 {% csrf_token %}
                                 <input type="hidden" name="bookurl" value="{{ pbook.bookurl.bookurl }}">
-                            </form>
-                            <button class="keep btn btn-i " data-bookurl="{{pbook.bookurl.bookurl}}" data-bookname="{{pbook.bookurl.bookname}}">收藏</button>
+                            </form>                            
+                            <button class="keep btn text-center" data-bookurl="{{pbook.bookurl.bookurl}}" data-bookname="{{pbook.bookurl.bookname}}" id="favorite-icon" >&#9825;</button>
                             
                         {% endif %}
                     </div>
